@@ -1,0 +1,27 @@
+{
+  "name": "RocketGoal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "webpack": "webpack watch --mode=development"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frmendez21/RocketGoal.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/frmendez21/RocketGoal/issues"
+  },
+  "homepage": "https://github.com/frmendez21/RocketGoal#readme",
+  "dependencies": {
+    "@babel/core": "^7.13.16",
+    "@babel/preset-env": "^7.13.15",
+    "babel-loader": "^8.2.2",
+    "webpack": "^5.35.1",
+    "webpack-cli": "^4.6.0"
+  }
+}
