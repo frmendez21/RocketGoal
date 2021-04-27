@@ -5,8 +5,11 @@ class GameView {
      
     }
 
+
     start() {
-        this.game.draw(this.ctx)
+        document.addEventListener('click', e => {
+            this.game.draw(this.ctx)
+        })
     }
 }
 
