@@ -2,10 +2,21 @@ body {
     background-color: black;
 }
 #game-canvas {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+    position: absolute;
+    left: 15%;
+    top: 80px;
     border: 1px solid gray;
+    z-index: 1;
+    background-color: transparent;
+}
+
+#bg-canvas {
+    position: absolute;
+    left: 15%;
+    top: 80px;
+    border: 1px solid gray;
+    z-index: 0;
+    background-color: transparent;
 }
 
 .hidden{

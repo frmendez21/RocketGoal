@@ -1,5 +1,3 @@
-const RAD = Math.PI/180;
-
 class Vehicle {
     constructor(ball) {
         this.ball = ball;
@@ -43,6 +41,8 @@ class Vehicle {
     moveForward() {
         // console.log(this.currentDir)
         this.detectBall();
+        this.lastX = this.currentX;
+        this.lastY = this.currentY;
         if(this.currentX <= this.maxX && this.currentX >= this.minX) {
             if(this.currentDir === 360 || this.currentDir === 0) {
                 this.currentY -= 5
@@ -97,19 +97,17 @@ class Vehicle {
         } else if ((yDiff1 === -95 && yDiff2 === 95) && ((xDiff1 >= -10 && xDiff1 <= -60) || (xDiff2 >= 10 && xDiff2 <= 60))) {
             if(this.currentDir === 360 || this.currentDir === 0) {this.ball.detectCollision(this.currentDir)}
         } 
-            // console.log('x1 ' + xDiff1)
-            // console.log('x2 ' + xDiff2)
-            // console.log('y1 ' + yDiff1)
-            // console.log('y2 ' + yDiff2)
     }
 
     draw(ctx) {
+        let x = Math.cos(Math.PI/180 * this.currentDir)
+        let y = Math.sin(Math.PI/180 * this.currentDir)
         ctx.save();
-        ctx.translate(this.currentX, this.currentY);
-        ctx.rotate(this.currentDir * RAD);
-
+        ctx.rotate(this.currentDir * Math.PI/180);
+        ctx.translate(x, y);
         this.vehicle = new Image();
         this.vehicle.onload = () => {
+           ctx.clearRect(0, 0, 1000, 700)
            ctx.drawImage(this.vehicle, this.currentX, this.currentY, -(this.vehicle.width / 10), -(this.vehicle.height / 10));
         }
         this.vehicle.src = `/public/images/car_imgs/${this.currentDir}.png`;

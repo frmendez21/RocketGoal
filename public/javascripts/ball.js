@@ -21,11 +21,13 @@ class Ball {
     }
 
     draw(ctx) {
+        ctx.save();
         this.ball = new Image();
         this.ball.onload = () => {
             ctx.drawImage(this.ball, this.currentX, this.currentY, 40, 40)
         }
         this.ball.src = '/public/images/soccer_ball.png';
+        ctx.restore();
     }
 }
 module.exports = Ball;
