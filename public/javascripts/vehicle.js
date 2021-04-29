@@ -6,15 +6,14 @@ class Vehicle {
         this.currentAngle = this.currentDir;
         this.minAngle = 0; 
         this.maxAngle = 360;
-        this.minX = 50; 
-        this.maxX = 900;
-        this.currentX = 50;
-        this.currentY = 625;
-        this.currentPos = [this.currentX, this.currentY]
+        this.currentX = 75;
+        this.currentY = 950;
+        this.speed = 0;
+        this.currentSpeed = 0;
+        this.maxSpeed = 5;
     };
 
     rotateLeft() {
-        // console.log(this.currentDir)
         if (this.currentAngle < this.maxAngle && this.currentAngle >= this.minAngle) {
             this.currentAngle += 30;
         } else if (this.currentAngle === 360) {
@@ -27,7 +26,7 @@ class Vehicle {
     }
 
     rotateRight() {
-        // console.log(this.currentDir)
+
         if(this.currentAngle <= this.maxAngle && this.currentAngle > this.minAngle) {
             this.currentAngle -= 30;
         } else if (this.currentAngle === 0) {
@@ -38,68 +37,59 @@ class Vehicle {
        }
     }
 
-    moveForward() {
-        // console.log(this.currentDir)
-        this.detectBall();
-        this.lastX = this.currentX;
-        this.lastY = this.currentY;
-        if(this.currentX <= this.maxX && this.currentX >= this.minX) {
-            if(this.currentDir === 360 || this.currentDir === 0) {
-                this.currentY -= 5
-            } else if (this.currentDir === 270) {
-                this.currentX += 5;
-            } else if (this.currentDir === 90) {
-                this.currentX -= 5;
-            } else if (this.currentDir === 180) {
-                this.currentY += 5;
-            } else if (this.currentDir === 240 || this.currentDir === 210) {
-                this.currentX += 5;
-                this.currentY += 5;
-            } else if (this.currentDir === 300 || this.currentDir === 330) {
-                this.currentX += 5;
-                this.currentY -= 5;
-            } else if (this.currentDir === 150 || this.currentDir === 120 ) {
-                this.currentX -= 5;
-                this.currentY += 5;
-            } else if (this.currentDir === 30 || this.currentDir === 60) {
-                this.currentX -= 5;
-                this.currentY -= 5;
-            }
-        }
-    }
-
-    moveBackward() {
-         if(this.currentX <= this.maxX && this.currentX >= this.minX) {
-            if(this.currentDir === 360 || this.currentDir === 0) {
-                this.currentY += 5
-            } else if (this.currentDir === 270) {
-                this.currentX -= 5;
-            } else if (this.currentDir === 90) {
-                this.currentX += 5;
-            } else if (this.currentDir === 180) {
-                this.currentY -= 5;
-            }
-        }
-    }
-
-    detectBall () {
-        const yDiff1 = (this.ball.currentY - this.currentY);
-        const yDiff2 = (this.currentY - this.ball.currentY);
-        const xDiff1 = (this.ball.currentX - this.currentX);
-        const xDiff2 = (this.currentX - this.ball.currentX);
-
-        if ((xDiff1 === 5 && xDiff2 === -5) && ((yDiff1 >= -25 && yDiff1 <= -55) || (yDiff2 >= 25 && yDiff2 <= 55))) {
-            if(this.currentDir === 270) {this.ball.detectCollision(this.currentDir)}
-        } else if ((yDiff1 === -5 && yDiff2 === 5) && ((xDiff1 >= -10 && xDiff1 <= -60) || (xDiff2 >= 10 && xDiff2 <= 60))) {
-            if(this.currentDir === 180) {this.ball.detectCollision(this.currentDir)}
-        } else if((xDiff1 === -90 && xDiff2 === 90) && ((yDiff1 >= -60 && yDiff1 <= -10) || (yDiff2 >= 10 && yDiff2 <= 60))) {
-            if(this.currentDir === 90) {this.ball.detectCollision(this.currentDir)}
-        } else if ((yDiff1 === -95 && yDiff2 === 95) && ((xDiff1 >= -10 && xDiff1 <= -60) || (xDiff2 >= 10 && xDiff2 <= 60))) {
-            if(this.currentDir === 360 || this.currentDir === 0) {this.ball.detectCollision(this.currentDir)}
+    moveForward(e) {
+        if(this.maxSpeed > this.speed && e.type === 'keydown') {
+            this.speed += 0.2;
+            this.currentSpeed = Math.floor(this.speed);
         } 
     }
 
+    reduceSpeed(e) {
+        if(e.code === 'Space' && this.speed >= 0.4) {
+            this.speed -= 0.4;
+        } else if(e.key === 'w' && this.speed > 0){
+            this.speed -= ((this.speed / 2));
+        }
+        this.currentSpeed = Math.floor(this.speed)
+    
+    }
+
+
+    calcNextPos() {
+        switch (this.currentDir) {
+            case 270:
+                this.currentX += this.currentSpeed;
+                break;
+            case 360: case 0:
+                this.currentY -= this.currentSpeed;
+                break;
+            case 90: 
+                this.currentX -= this.currentSpeed;
+                break;
+            case 180: 
+                this.currentY += this.currentSpeed;
+                break;
+            case 240: case 210: 
+                this.currentX += this.currentSpeed;
+                this.currentY += this.currentSpeed / 2;
+                break;
+            case 300: case 330: 
+                this.currentX += this.currentSpeed;
+                this.currentY -= this.currentSpeed / 2;
+                break;
+            case 150: case 120:
+                this.currentX -= this.currentSpeed;
+                this.currentY += this.currentSpeed / 2;
+                break;
+            default:
+                this.currentX -= this.currentSpeed;
+                this.currentY -= this.currentSpeed / 2
+                break;
+        }
+    };
+ 
     draw(ctx) {
+        this.calcNextPos();
         let x = Math.cos(Math.PI/180 * this.currentDir)
         let y = Math.sin(Math.PI/180 * this.currentDir)
         ctx.save();
@@ -107,8 +97,8 @@ class Vehicle {
         ctx.translate(x, y);
         this.vehicle = new Image();
         this.vehicle.onload = () => {
-           ctx.clearRect(0, 0, 1000, 700)
-           ctx.drawImage(this.vehicle, this.currentX, this.currentY, -(this.vehicle.width / 10), -(this.vehicle.height / 10));
+           ctx.clearRect(0, 0, 1425, 1000)
+           ctx.drawImage(this.vehicle, this.currentX, this.currentY, -(this.vehicle.width / 8), -(this.vehicle.height / 8));
         }
         this.vehicle.src = `/public/images/car_imgs/${this.currentDir}.png`;
 

@@ -6,14 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rocket Goal</title>
     <link rel="stylesheet" href="./public/stylesheets/game.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header class='game-head'>
-        <h1 id="title">Rocket Goal</h1>
-    </header>
-    <div class="game-container">
-        <canvas id="game-canvas" height="700" width="1000"></canvas>
-        <canvas id="bg-canvas" height="700" width="1000"></canvas>
+    
+    <div class="game-container" style="max-height: 775px;max-width:1425px;overflow: scroll">
+        <button class="start-btn">Start</button>
+        <canvas id="game-canvas" height="1000" width="1425"></canvas>
+        <canvas id="bg-canvas" height="1000" width="1425"></canvas>
+        <canvas id="static-canvas" height="1000" width="1425"></canvas>
     </div>
     <script src="./public/bundle.js"></script>
 </body>

@@ -1,29 +1,46 @@
 body {
     background-color: black;
 }
+.start-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 3;
+}
 #game-canvas {
     position: absolute;
-    left: 15%;
-    top: 80px;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
     border: 1px solid gray;
-    z-index: 1;
+    z-index: 2;
     background-color: transparent;
 }
 
 #bg-canvas {
     position: absolute;
-    left: 15%;
-    top: 80px;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
     border: 1px solid gray;
     z-index: 0;
+    background-image: url(../images/logo.png);
+    background-size: 100% 100%;
+
+}
+#static-canvas {
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    border: 1px solid gray;
+    z-index: 1;
     background-color: transparent;
 }
 
-.hidden{
+.hidden {
     display: none;
-}
-
-#title {
-    color: white;
-    text-align: center;
 }
