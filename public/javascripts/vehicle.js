@@ -1,5 +1,9 @@
-class Vehicle {
+const MovingObject = require("./moving_objects");
+
+class Vehicle extends MovingObject{
     constructor(ball) {
+        super(ball)
+    
         this.ball = ball;
         this.directions = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330];
         this.currentDir = 270;
@@ -11,6 +15,7 @@ class Vehicle {
         this.speed = 0;
         this.currentSpeed = 0;
         this.maxSpeed = 5;
+        this.ballDistance = 0;
     };
 
     rotateLeft() {
@@ -19,11 +24,19 @@ class Vehicle {
         } else if (this.currentAngle === 360) {
             this.currentAngle = 0;
         }
-
         if(this.directions.includes(this.currentAngle)) {
            this.currentDir = this.currentAngle;
        }
     }
+
+    detectBall() {
+       this.ballDistance = this.findDistance(this.currentX, this.currentY, this.ball.currentX, this.ball.currentY)
+
+       if(this.ballDistance <= 55) {
+          this.ball.vehicleHit(this.currentDir, this.currentSpeed);
+        }
+    }
+
 
     rotateRight() {
 
@@ -40,8 +53,9 @@ class Vehicle {
     moveForward(e) {
         if(this.maxSpeed > this.speed && e.type === 'keydown') {
             this.speed += 0.2;
-            this.currentSpeed = Math.floor(this.speed);
         } 
+        this.currentSpeed = Math.floor(this.speed);
+       
     }
 
     reduceSpeed(e) {
@@ -90,6 +104,9 @@ class Vehicle {
  
     draw(ctx) {
         this.calcNextPos();
+        this.detectBall();
+        
+         this.currentSpeed = Math.floor(this.speed)
         let x = Math.cos(Math.PI/180 * this.currentDir)
         let y = Math.sin(Math.PI/180 * this.currentDir)
         ctx.save();
@@ -98,7 +115,7 @@ class Vehicle {
         this.vehicle = new Image();
         this.vehicle.onload = () => {
            ctx.clearRect(0, 0, 1425, 1000)
-           ctx.drawImage(this.vehicle, this.currentX, this.currentY, -(this.vehicle.width / 8), -(this.vehicle.height / 8));
+           ctx.drawImage(this.vehicle, this.currentX, this.currentY, -(this.vehicle.width / 10), -(this.vehicle.height / 10));
         }
         this.vehicle.src = `/public/images/car_imgs/${this.currentDir}.png`;
 

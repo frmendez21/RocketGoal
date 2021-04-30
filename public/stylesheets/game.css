@@ -41,6 +41,14 @@ body {
     background-color: transparent;
 }
 
+#song {
+    z-index: 4;
+    position: absolute;
+    border-radius: 2px;
+    color: green;
+   
+}
+
 .hidden {
     display: none;
 }

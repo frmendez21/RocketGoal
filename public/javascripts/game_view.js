@@ -11,7 +11,6 @@ class GameView {
        document.addEventListener('keydown', e => {
             if(e.key === 'e') this.vehicle.rotateRight()
             if(e.key === 'q') this.vehicle.rotateLeft()
-            if(e.key === 's') this.vehicle.moveBackward()
             if(e.key === 'w') this.vehicle.moveForward(e)
             if(e.code === 'Space') this.vehicle.reduceSpeed(e);
         
