@@ -1,4 +1,6 @@
 class Track {
+    constructor() {
+    }
 
     draw(ctx) {
         ctx.beginPath()

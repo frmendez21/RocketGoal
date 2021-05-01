@@ -23,11 +23,14 @@ class GameView {
     start() {
         // document.addEventListener('click', e => {
         //     if(e.target.className === 'start-btn') {
+                const audio = document.getElementById('song');
+                audio.volume = 0.1;
+                // audio.play()
                 this.game.loadStatic(this.stCtx);
                 this.setEventListeners();
                 requestAnimationFrame(this.animate);
-            //     document.querySelector('.start-btn').classList.add('hidden')
-            // };
+                document.querySelector('.start-btn').classList.add('hidden')
+        //     };
         // });
     };
 

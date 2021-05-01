@@ -15,7 +15,7 @@ class Vehicle extends MovingObject{
         this.speed = 0;
         this.currentSpeed = 0;
         this.maxSpeed = 5;
-        this.ballDistance = 0;
+        this.ballDistance = 0; 
     };
 
     rotateLeft() {
@@ -70,6 +70,9 @@ class Vehicle extends MovingObject{
 
 
     calcNextPos() {
+        if(this.currentX <= 0) this.currentDir = 270;
+        if(this.currentX >= 1450) this.currentDir = 90;
+        if(this.currentY >= 1000) this.currentDir = 0;
         switch (this.currentDir) {
             case 270:
                 this.currentX += this.currentSpeed;
