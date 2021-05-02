@@ -82,7 +82,7 @@ class Ball extends MovingObject{
         this.ball.onload = () => {
             ctx.drawImage(this.ball, this.currentX, this.currentY, -(this.ball.width / 10), -(this.ball.height / 10))
         }
-        this.ball.src = '/public/images/soccer_ball.png';
+        this.ball.src = 'public/images/soccer_ball.png';
         ctx.restore();
     }
 }
