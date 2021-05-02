@@ -28,7 +28,7 @@ class BlueOrbs {
             ctx.drawImage(this.orb, 1375, 650, 25, 25)
             ctx.drawImage(this.orb, 1375, 325, 25, 25)
         };
-        this.orb.src = `/public/images/orbs/${this.count}.png`
+        this.orb.src = `public/images/orbs/${this.count}.png`
         ctx.restore()
     }
 }

@@ -120,7 +120,7 @@ class Vehicle extends MovingObject{
            ctx.clearRect(0, 0, 1425, 1000)
            ctx.drawImage(this.vehicle, this.currentX, this.currentY, -(this.vehicle.width / 10), -(this.vehicle.height / 10));
         }
-        this.vehicle.src = `/public/images/car_imgs/${this.currentDir}.png`;
+        this.vehicle.src = `public/images/car_imgs/${this.currentDir}.png`;
 
         ctx.restore();
     };

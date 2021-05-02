@@ -14,7 +14,7 @@ class Walls {
                     this.x += 75
             };
         };
-        // this.stone.src = '/public/images/stone.png'
+        // this.stone.src = 'public/images/stone.png'
         // ctx.restore();
     }
 }

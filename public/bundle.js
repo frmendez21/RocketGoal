@@ -203,7 +203,7 @@ var BlueOrbs = /*#__PURE__*/function () {
         ctx.drawImage(_this.orb, 1375, 325, 25, 25);
       };
 
-      this.orb.src = "/public/images/orbs/".concat(this.count, ".png");
+      this.orb.src = "public/images/orbs/".concat(this.count, ".png");
       ctx.restore();
     }
   }]);
@@ -376,7 +376,7 @@ var Goal = /*#__PURE__*/function () {
         ctx.drawImage(_this.goal, 600, 0, 200, 100);
       };
 
-      this.goal.src = '/public/images/goal.png';
+      this.goal.src = 'public/images/goal.png';
     }
   }]);
 
@@ -667,7 +667,7 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
         ctx.drawImage(_this2.vehicle, _this2.currentX, _this2.currentY, -(_this2.vehicle.width / 10), -(_this2.vehicle.height / 10));
       };
 
-      this.vehicle.src = "/public/images/car_imgs/".concat(this.currentDir, ".png");
+      this.vehicle.src = "public/images/car_imgs/".concat(this.currentDir, ".png");
       ctx.restore();
     }
   }]);
@@ -715,7 +715,7 @@ var Walls = /*#__PURE__*/function () {
         }
 
         ;
-      }; // this.stone.src = '/public/images/stone.png'
+      }; // this.stone.src = 'public/images/stone.png'
       // ctx.restore();
 
     }
