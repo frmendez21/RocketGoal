@@ -4,21 +4,23 @@ const Track = require('./track');
 const Walls = require('./walls');
 const Goal = require('./goal');
 const BlueOrbs = require('./blue_orbs');
+const EnemyVehicle = require('./enemy_vehicle');
 
 class Game {
     constructor() {
         this.walls = new Walls;
         this.track = new Track;
         this.ball = new Ball(this.track);
-        this.vehicle = new Vehicle(this.ball);
-        this.goal = new Goal;
         this.orb = new BlueOrbs;
+        this.vehicle = new Vehicle(this.ball, this.orb);
+        this.enemyVehicle = new EnemyVehicle(this.ball);
+        this.goal = new Goal;
     }
 
     loadResources(ctx) {
         this.vehicle.draw(ctx);
         this.ball.draw(ctx);
-        
+        this.enemyVehicle.draw(ctx)
     }
 
     loadStatic(sCtx) {

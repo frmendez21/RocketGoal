@@ -1,9 +1,17 @@
 class Track {
     constructor() {
-    }
+    };
 
     draw(ctx) {
-        ctx.beginPath()
+       
+    };
+};
+
+module.exports = Track;
+
+
+/* 
+ctx.beginPath()
         ctx.moveTo(0, 875)
         ctx.lineTo(1250, 875)
         ctx.lineTo(1250, 825)
@@ -43,7 +51,4 @@ class Track {
         ctx.lineWidth = 12;
         ctx.strokeStyle = 'white';
         ctx.stroke()
-    }
-}
-
-module.exports = Track;
+*/

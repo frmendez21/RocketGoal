@@ -1,129 +1,133 @@
 const MovingObject = require("./moving_objects");
 
 class Vehicle extends MovingObject{
-    constructor(ball) {
+    constructor(ball, orb) {
         super(ball)
     
         this.ball = ball;
-        this.directions = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330];
-        this.currentDir = 270;
-        this.currentAngle = this.currentDir;
-        this.minAngle = 0; 
-        this.maxAngle = 360;
-        this.currentX = 75;
-        this.currentY = 950;
+        this.orb = orb;
+        this.currentAngle = 0;
+        // this.currentX = 75;
+        // this.currentY = 950;
+        this.currentX = 550;
+        this.currentY = 400;
         this.speed = 0;
         this.currentSpeed = 0;
-        this.maxSpeed = 5;
+        this.maxSpeed = 7;
+        this.boostedSpeed = 8;
         this.ballDistance = 0; 
+        this.orbDetected = false;
+
     };
 
-    rotateLeft() {
-        if (this.currentAngle < this.maxAngle && this.currentAngle >= this.minAngle) {
-            this.currentAngle += 30;
-        } else if (this.currentAngle === 360) {
-            this.currentAngle = 0;
+    
+    rotateVehicle(e) {
+        if(e.key === 'q') {
+            if(this.currentAngle <= -360) this.currentAngle = 0;
+            if(this.maxSpeed > this.currentSpeed) this.currentSpeed += 0.1;
+            this.currentAngle -= (5 + this.currentSpeed);
+        } else if(e.key === 'e') {
+             if(this.currentAngle >= 360) this.currentAngle = 0;
+             if(this.maxSpeed > this.currentSpeed) this.currentSpeed += 0.1;
+            this.currentAngle += (5 + this.currentSpeed);
         }
-        if(this.directions.includes(this.currentAngle)) {
-           this.currentDir = this.currentAngle;
-       }
+    }
+
+    moveVehicle(e) {
+        if(e.key === 'w' && (this.maxSpeed > this.speed && e.type === 'keydown')) {
+            this.speed += 0.4;
+        } else if( e.key === 's' && e.type === 'keydown') {
+            this.speed -= 0.1;
+        }
+        this.currentSpeed = Math.floor(this.speed);
     }
 
     detectBall() {
-       this.ballDistance = this.findDistance(this.currentX, this.currentY, this.ball.currentX, this.ball.currentY)
+       let x = this.currentX;
+       let y = this.currentY
+       this.ballDistance = this.findDistance(x, y, this.ball.currentX, this.ball.currentY)
 
-       if(this.ballDistance <= 55) {
-          this.ball.vehicleHit(this.currentDir, this.currentSpeed);
+       if(this.ballDistance <= 65) {
+          this.ball.vehicleHit(this.currentAngle, this.currentSpeed);
         }
     }
 
-
-    rotateRight() {
-
-        if(this.currentAngle <= this.maxAngle && this.currentAngle > this.minAngle) {
-            this.currentAngle -= 30;
-        } else if (this.currentAngle === 0) {
-            this.currentAngle = 330;
-        }
-       if(this.directions.includes(this.currentAngle)) {
-           this.currentDir = this.currentAngle;
-       }
-    }
-
-    moveForward(e) {
-        if(this.maxSpeed > this.speed && e.type === 'keydown') {
-            this.speed += 0.2;
-        } 
-        this.currentSpeed = Math.floor(this.speed);
-       
-    }
-
+    
+   
     reduceSpeed(e) {
+        e.preventDefault(); 
         if(e.code === 'Space' && this.speed >= 0.4) {
             this.speed -= 0.4;
         } else if(e.key === 'w' && this.speed > 0){
             this.speed -= ((this.speed / 2));
+        } else if(this.speed < 0) {
+            this.speed += 0.4;
         }
         this.currentSpeed = Math.floor(this.speed)
     
     }
 
+    testFunc() {
+        console.log(this.currentX)
+        console.log(this.ball.currentX)
+        console.log(this.ballDistance)
+    }
 
-    calcNextPos() {
-        if(this.currentX <= 0) this.currentDir = 270;
-        if(this.currentX >= 1450) this.currentDir = 90;
-        if(this.currentY >= 1000) this.currentDir = 0;
-        switch (this.currentDir) {
-            case 270:
-                this.currentX += this.currentSpeed;
-                break;
-            case 360: case 0:
-                this.currentY -= this.currentSpeed;
-                break;
-            case 90: 
-                this.currentX -= this.currentSpeed;
-                break;
-            case 180: 
-                this.currentY += this.currentSpeed;
-                break;
-            case 240: case 210: 
-                this.currentX += this.currentSpeed;
-                this.currentY += this.currentSpeed / 2;
-                break;
-            case 300: case 330: 
-                this.currentX += this.currentSpeed;
-                this.currentY -= this.currentSpeed / 2;
-                break;
-            case 150: case 120:
-                this.currentX -= this.currentSpeed;
-                this.currentY += this.currentSpeed / 2;
-                break;
-            default:
-                this.currentX -= this.currentSpeed;
-                this.currentY -= this.currentSpeed / 2
-                break;
+
+    detectOrb () {
+
+        for(let i = 0; i < this.orb.xPos.length; i++) {
+            let orbDistance = this.findDistance(this.currentX, this.currentY, this.orb.xPos[i], this.orb.yPos[i])
+            if(orbDistance <= 60) {
+                this.orbDetected = true;
+                setTimeout(() => this.orbDetected = false, 5000)
+            }
         }
-    };
+    }
  
     draw(ctx) {
-        this.calcNextPos();
         this.detectBall();
+        // this.detectOrb();
+        // window.scroll(this.currentX, this.currentY / 2)
+        if(this.currentX > 1425) this.currentAngle = 180;
+        if(this.currentX < 0) this.currentAngle = 360;
+        if(this.currentY > 1000) this.currentAngle = 270;
+        if(this.currentY < 0) this.currentAngle = 90;
+        this.currentX += (this.currentSpeed * Math.cos(Math.PI/180 * this.currentAngle))
+        this.currentY += (this.currentSpeed * Math.sin(Math.PI/180 * this.currentAngle))
         
-         this.currentSpeed = Math.floor(this.speed)
-        let x = Math.cos(Math.PI/180 * this.currentDir)
-        let y = Math.sin(Math.PI/180 * this.currentDir)
-        ctx.save();
-        ctx.rotate(this.currentDir * Math.PI/180);
-        ctx.translate(x, y);
         this.vehicle = new Image();
+        this.vehicle.src = `public/images/car_imgs/270.png`;
+        this.vehicle.width = 80;
+        this.vehicle.height = 40;
         this.vehicle.onload = () => {
-           ctx.clearRect(0, 0, 1425, 1000)
-           ctx.drawImage(this.vehicle, this.currentX, this.currentY, -(this.vehicle.width / 10), -(this.vehicle.height / 10));
+            ctx.clearRect(0, 0, 1425, 1000)
+            ctx.save();
+            ctx.translate(this.currentX, this.currentY);
+            ctx.rotate(Math.PI/180 * this.currentAngle)
+            ctx.drawImage(this.vehicle, -(this.vehicle.width / 2), -(this.vehicle.height / 2), this.vehicle.width, this.vehicle.height);
+            ctx.restore();
         }
-        this.vehicle.src = `public/images/car_imgs/${this.currentDir}.png`;
-
-        ctx.restore();
+        
+        
     };
 };
 
 module.exports = Vehicle;
+
+
+/*
+let bgCtx = document.getElementById('bg-canvas').getContext('2d');
+        let sCtx = document.getElementById('static-canvas').getContext('2d')
+bgCtx.save()
+        sCtx.save()
+        ctx.rotate(this.currentDir * Math.PI/180);
+        bgCtx.rotate(this.currentDir * Math.PI/180);
+        sCtx.rotate(this.currentDir * Math.PI/180);
+ bgCtx.translate(-this.currentX, -this.currentY);
+        sCtx.translate(-this.currentX, -this.currentY);
+ bgCtx.restore()
+        
+        
+        sCtx.restore()
+*/

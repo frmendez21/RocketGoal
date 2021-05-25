@@ -1,6 +1,11 @@
 body {
     background-color: black;
+    font-family: 'Noto Sans KR', sans-serif;
+    /* overflow: hidden; */
+    height: 1000;
+    width: 1425;
 }
+
 .start-btn {
     position: absolute;
     top: 50%;
@@ -17,6 +22,8 @@ body {
     z-index: 2;
     background-color: transparent;
 }
+
+
 
 #bg-canvas {
     position: absolute;
@@ -47,6 +54,80 @@ body {
     border-radius: 2px;
     color: green;
    
+}
+
+.hidden {
+    display: none;
+}
+
+.start-game-container {
+    position: absolute;
+    z-index: -2;
+    left: 25%;
+    top: 25%;
+    bottom: 25%;
+    right: 25%;
+    background-color: rgba(26, 26, 26, 0.8);
+    border-radius: 10px;
+    box-shadow: 2px 2px 2px black;
+}
+.start-game-head{
+    text-align: center;
+    color: white;
+    font-size: 22px;
+}
+.controls-head {
+    text-align: center;
+    color: white;
+    font-size: 20px;
+}
+.controls-container {
+    position: relative;
+    left: 32%;
+    bottom: 10px;
+    width: 30%;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 2px 2px 2px white;
+}
+.controls-list-item {
+    list-style: none;
+    padding-bottom: 15px;
+}
+.fas {
+    color: green;
+    padding-right: 15px;
+}
+#stop {
+    color: red;
+}
+#control {
+    display: inline;
+}
+
+.start-btn {
+    display: block;
+    margin-left: -30px;
+    margin-top: 16%;
+    border: none;
+    background-color: rgb(69, 236, 18);
+    font-weight: bolder;
+    padding: 10px;
+    box-shadow: 2px 2px 2px green;
+    cursor: pointer;
+}
+
+
+#end-game-container {
+   position: absolute;
+    z-index: 5;
+    left: 25%;
+    top: 25%;
+    bottom: 25%;
+    right: 25%;
+    background-color: rgba(26, 26, 26, 0.8);
+    border-radius: 10px;
+    box-shadow: 2px 2px 2px black;
 }
 
 .hidden {

@@ -7,12 +7,41 @@
     <title>Rocket Goal</title>
     <link rel="stylesheet" href="./public/stylesheets/game.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/6236dc5361.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="game-container" style="max-height: 775px;max-width:1425px;overflow: scroll">
+    <div id="game-container">
         <audio id="song" src="public/audio/fly.mp3" controls ></audio>
-        <button class="start-btn">Start</button>
+        <audio id="impact" src="public//audio//impact.wav" ></audio>
+        <div class="start-game-container">
+
+            <h3 class="start-game-head">WELCOME TO ROCKET GOAL</h3>
+            <h5 class="controls-head">Controls:</h5>
+            <ul class="controls-container">
+                <li class="controls-list-item">
+                    <i class="fas fa-arrow-up"></i>
+                    <p id="control">W - move forward</p>
+                </li>
+                <li class="controls-list-item">
+                    <i class="fas fa-arrow-right"></i>
+                    <p id="control">E - turn right</p>
+                </li>
+                <li class="controls-list-item">
+                    <i class="fas fa-arrow-left"></i>
+                    <p id="control">Q - turn left</p>
+                </li>
+                <li class="controls-list-item">
+                    <i class="fas fa-hand-paper" id="stop"></i>
+                    <p id="control">Space - brake</p>
+                </li>
+            </ul>
+            <button class="start-btn">START</button>
+        </div>
+
+        <div id="end-game-container" class="hidden">
+            <h3>YOU WIN</h3>
+        </div>
         <canvas id="game-canvas" height="1000" width="1425"></canvas>
         <canvas id="bg-canvas" height="1000" width="1425"></canvas>
         <canvas id="static-canvas" height="1000" width="1425"></canvas>
