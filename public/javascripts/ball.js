@@ -3,55 +3,50 @@ const MovingObject = require("./moving_objects");
 class Ball extends MovingObject{
     constructor(track) {
         super()
-        this.currentX = 700;
-        this.currentY = 400;
-        this.curentPos = [this.currentX, this.currentY];
-        this.velocity = 60;
-        this.currentSpeed = 0;
-        this.currentAngle = 0;
         this.track = track;
-        this.trackCollision = false;
-        this.withinBounds = true;
-        // this.calcNextPos = this.calcNextPos.bind(this)
+        this.currentX = 500;
+        this.currentY = 550;
+        this.velocity = 0;
+        this.currentAngle = 0;
         this.impact =  document.getElementById('impact');
+        this.impact.volume = 0.3;
     }
 
-    detectGoal() {
-        if((this.currentX >= 650 && this.currentX <= 800 ) && this.currentY <= 120) {
-            let endGame = document.getElementById('end-game-container');
-            // endGame.classList.remove('hidden');
-
-        }
-    }
-
-    detectTrack() {
-       let distance = 0;
-       if(this.currentX < 1250 && (this.currentY <= 950 && this.currentY >= 880)) {
-           distance = this.findDistance(this.currentX, this.currentY, this.currentX, 875)
-       } else if (this.currentY > 950 && this.currentY <= 1000) {
-           distance = this.findDistance(this.currentX, this.currentY, this.currentX, 990)
-       } else if(this.currentX >= 1400 && (this.currentY >= 725)){
-            distance = this.findDistance(this.currentX, this.currentY, 1400, this.currentY)
-       }else {
-           distance = 100;
-       }
-       distance < 50 ? this.trackCollision = true : this.trackCollision = false;
-       distance >= 50 ? this.withinBounds = true : this.withinBounds = false;
-    }
     vehicleHit(angle, speed) {
+        clearTimeout(this.vehicleHit, 100)
+        if(speed !== 0) this.impact.play()
         this.currentAngle = angle;
-        this.currentSpeed = (speed * 2);
-        setTimeout(() => this.currentSpeed = 0, 300)
-        this.impact.play()
+        this.velocity = (speed * 2);
+        setTimeout(() => this.velocity = 0, speed * 100)
     }
     
+    detectBounds() {
+        if(this.currentX >= 1425) {
+            this.currentAngle = 180;
+            this.currentX -= (this.velocity + 1);
+            this.impact.play();
+        } else if(this.currentX <= 0) {
+            this.currentAngle = 0;
+            this.currentX += (this.velocity + 1);
+            this.impact.play();
+        } else if(this.currentY > 2000) {
+            this.currentAngle = 270;
+            this.currentY -= (this.velocity + 1);
+            this.impact.play();
+        } else if(this.currentY < 0) {
+            this.currentAngle = 90;
+            this.currentY += (this.velocity + 1);
+            this.impact.play();
+        };
+    }
 
     draw(ctx) {
-        this.detectGoal();
+        // this.detectGoal();
         // this.detectTrack()
-        this.currentX += (this.currentSpeed * Math.cos(Math.PI/180 * this.currentAngle))
-        this.currentY += (this.currentSpeed * Math.sin(Math.PI/180 * this.currentAngle))
         
+        this.detectBounds();
+        this.currentX += (this.velocity * Math.cos(Math.PI/180 * this.currentAngle))
+        this.currentY += (this.velocity * Math.sin(Math.PI/180 * this.currentAngle))
         this.ball = new Image();
         this.ball.src = 'public/images/soccer_ball.png';
         this.ball.width = 50;

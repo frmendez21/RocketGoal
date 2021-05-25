@@ -42,66 +42,62 @@ var Ball = /*#__PURE__*/function (_MovingObject) {
     _classCallCheck(this, Ball);
 
     _this = _super.call(this);
-    _this.currentX = 700;
-    _this.currentY = 400;
-    _this.curentPos = [_this.currentX, _this.currentY];
-    _this.velocity = 60;
-    _this.currentSpeed = 0;
-    _this.currentAngle = 0;
     _this.track = track;
-    _this.trackCollision = false;
-    _this.withinBounds = true; // this.calcNextPos = this.calcNextPos.bind(this)
-
+    _this.currentX = 500;
+    _this.currentY = 550;
+    _this.velocity = 0;
+    _this.currentAngle = 0;
     _this.impact = document.getElementById('impact');
+    _this.impact.volume = 0.3;
     return _this;
   }
 
   _createClass(Ball, [{
-    key: "detectGoal",
-    value: function detectGoal() {
-      if (this.currentX >= 650 && this.currentX <= 800 && this.currentY <= 120) {
-        var endGame = document.getElementById('end-game-container'); // endGame.classList.remove('hidden');
-      }
-    }
-  }, {
-    key: "detectTrack",
-    value: function detectTrack() {
-      var distance = 0;
-
-      if (this.currentX < 1250 && this.currentY <= 950 && this.currentY >= 880) {
-        distance = this.findDistance(this.currentX, this.currentY, this.currentX, 875);
-      } else if (this.currentY > 950 && this.currentY <= 1000) {
-        distance = this.findDistance(this.currentX, this.currentY, this.currentX, 990);
-      } else if (this.currentX >= 1400 && this.currentY >= 725) {
-        distance = this.findDistance(this.currentX, this.currentY, 1400, this.currentY);
-      } else {
-        distance = 100;
-      }
-
-      distance < 50 ? this.trackCollision = true : this.trackCollision = false;
-      distance >= 50 ? this.withinBounds = true : this.withinBounds = false;
-    }
-  }, {
     key: "vehicleHit",
     value: function vehicleHit(angle, speed) {
       var _this2 = this;
 
+      clearTimeout(this.vehicleHit, 100);
+      if (speed !== 0) this.impact.play();
       this.currentAngle = angle;
-      this.currentSpeed = speed * 2;
+      this.velocity = speed * 2;
       setTimeout(function () {
-        return _this2.currentSpeed = 0;
-      }, 300);
-      this.impact.play();
+        return _this2.velocity = 0;
+      }, speed * 100);
+    }
+  }, {
+    key: "detectBounds",
+    value: function detectBounds() {
+      if (this.currentX >= 1425) {
+        this.currentAngle = 180;
+        this.currentX -= this.velocity + 1;
+        this.impact.play();
+      } else if (this.currentX <= 0) {
+        this.currentAngle = 0;
+        this.currentX += this.velocity + 1;
+        this.impact.play();
+      } else if (this.currentY > 2000) {
+        this.currentAngle = 270;
+        this.currentY -= this.velocity + 1;
+        this.impact.play();
+      } else if (this.currentY < 0) {
+        this.currentAngle = 90;
+        this.currentY += this.velocity + 1;
+        this.impact.play();
+      }
+
+      ;
     }
   }, {
     key: "draw",
     value: function draw(ctx) {
       var _this3 = this;
 
-      this.detectGoal(); // this.detectTrack()
-
-      this.currentX += this.currentSpeed * Math.cos(Math.PI / 180 * this.currentAngle);
-      this.currentY += this.currentSpeed * Math.sin(Math.PI / 180 * this.currentAngle);
+      // this.detectGoal();
+      // this.detectTrack()
+      this.detectBounds();
+      this.currentX += this.velocity * Math.cos(Math.PI / 180 * this.currentAngle);
+      this.currentY += this.velocity * Math.sin(Math.PI / 180 * this.currentAngle);
       this.ball = new Image();
       this.ball.src = 'public/images/soccer_ball.png';
       this.ball.width = 50;
@@ -176,6 +172,193 @@ module.exports = BlueOrbs;
 
 /***/ }),
 
+/***/ "./public/javascripts/enemy.js":
+/*!*************************************!*\
+  !*** ./public/javascripts/enemy.js ***!
+  \*************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var Vehicle = __webpack_require__(/*! ./vehicle */ "./public/javascripts/vehicle.js");
+
+var Enemy = /*#__PURE__*/function (_Vehicle) {
+  _inherits(Enemy, _Vehicle);
+
+  var _super = _createSuper(Enemy);
+
+  function Enemy(options, ball, player) {
+    var _this;
+
+    _classCallCheck(this, Enemy);
+
+    _this = _super.call(this, ball);
+    _this.options = options;
+    _this.startPos = [options.x, options.y];
+    _this.currentX = options.x;
+    _this.currentY = options.y;
+    _this.currentAngle = options.a;
+    _this.ball = ball;
+    _this.player = player;
+    _this.nextX = _this.currentX + 200;
+    _this.nextY = _this.currentY + 200;
+    _this.currentSpeed = 5;
+    _this.moveDir = true;
+    return _this;
+  }
+
+  _createClass(Enemy, [{
+    key: "detectBall",
+    value: function detectBall() {
+      var dist = this.findDistance(this.currentX, this.currentY, this.ball.currentX, this.ball.currentY);
+
+      if (dist <= 70) {
+        this.ball.vehicleHit(this.currentAngle, this.currentSpeed);
+      }
+
+      ;
+    }
+  }, {
+    key: "detectPlayer",
+    value: function detectPlayer() {
+      var dist = this.findDistance(this.currentX, this.currentY, this.player.currentX, this.player.currentY);
+
+      if (dist < 60) {
+        this.player.health -= 10;
+      }
+    }
+  }, {
+    key: "draw",
+    value: function draw(ctx, dir) {
+      var _this2 = this;
+
+      this.detectBall();
+      this.detectPlayer();
+      this.calcEnemyMove(dir);
+      this.vehicle = new Image();
+      this.vehicle.src = "public/images/car_imgs/".concat(this.options.c, "_car.png");
+      this.vehicle.width = this.options.w;
+      this.vehicle.height = this.options.h;
+
+      this.vehicle.onload = function () {
+        ctx.save();
+        ctx.translate(_this2.currentX, _this2.currentY);
+        ctx.rotate(Math.PI / 180 * _this2.currentAngle);
+        ctx.drawImage(_this2.vehicle, -(_this2.vehicle.width / 2), -(_this2.vehicle.height / 2), _this2.vehicle.width, _this2.vehicle.height);
+        ctx.restore();
+      };
+    }
+  }]);
+
+  return Enemy;
+}(Vehicle);
+
+;
+module.exports = Enemy;
+
+/***/ }),
+
+/***/ "./public/javascripts/enemy_goalie.js":
+/*!********************************************!*\
+  !*** ./public/javascripts/enemy_goalie.js ***!
+  \********************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var Vehicle = __webpack_require__(/*! ./vehicle */ "./public/javascripts/vehicle.js");
+
+var EnemyGoalie = /*#__PURE__*/function (_Vehicle) {
+  _inherits(EnemyGoalie, _Vehicle);
+
+  var _super = _createSuper(EnemyGoalie);
+
+  function EnemyGoalie(pos, ball) {
+    var _this;
+
+    _classCallCheck(this, EnemyGoalie);
+
+    _this = _super.call(this, pos, ball);
+    _this.ball = ball;
+    _this.startPos = pos;
+    _this.currentX = pos[0];
+    _this.currentY = pos[1];
+    _this.nextX = _this.currentX + 150;
+    _this.currentAngle = 90;
+    _this.currentSpeed = 10;
+    _this.moveDir = true;
+    return _this;
+  }
+
+  _createClass(EnemyGoalie, [{
+    key: "draw",
+    value: function draw(ctx, dir) {
+      var _this2 = this;
+
+      this.detectBall();
+      this.calcEnemyMove(dir);
+      this.vehicle = new Image();
+      this.vehicle.src = 'public/images/car_imgs/red_car.png';
+      this.vehicle.width = 80;
+      this.vehicle.height = 50;
+
+      this.vehicle.onload = function () {
+        ctx.save();
+        ctx.translate(_this2.currentX, _this2.currentY);
+        ctx.rotate(Math.PI / 180 * _this2.currentAngle);
+        ctx.drawImage(_this2.vehicle, -(_this2.vehicle.width / 2), -(_this2.vehicle.height / 2), _this2.vehicle.width, _this2.vehicle.height);
+        ctx.restore();
+      };
+    }
+  }]);
+
+  return EnemyGoalie;
+}(Vehicle);
+
+module.exports = EnemyGoalie;
+
+/***/ }),
+
 /***/ "./public/javascripts/enemy_vehicle.js":
 /*!*********************************************!*\
   !*** ./public/javascripts/enemy_vehicle.js ***!
@@ -206,56 +389,65 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 var Vehicle = __webpack_require__(/*! ./vehicle */ "./public/javascripts/vehicle.js");
 
+var EnemyGoalie = __webpack_require__(/*! ./enemy_goalie */ "./public/javascripts/enemy_goalie.js");
+
+var Enemy = __webpack_require__(/*! ./enemy */ "./public/javascripts/enemy.js");
+
 var EnemyVehicle = /*#__PURE__*/function (_Vehicle) {
   _inherits(EnemyVehicle, _Vehicle);
 
   var _super = _createSuper(EnemyVehicle);
 
-  function EnemyVehicle(ball) {
+  function EnemyVehicle(ball, player) {
     var _this;
 
     _classCallCheck(this, EnemyVehicle);
 
-    _this = _super.call(this, ball);
-    _this.ball = ball;
-    _this.currentX = 640;
-    _this.currentY = 150;
-    _this.currentDir = 180;
-    _this.currentSpeed = 7;
-    _this.moveRight = true;
+    _this = _super.call(this, ball, player);
+    _this.enemyGoalie = new EnemyGoalie([600, 100], ball);
+    _this.enemy1 = new Enemy({
+      x: 250,
+      y: 500,
+      a: 270,
+      c: 'green',
+      h: 80,
+      w: 90
+    }, ball, player);
+    _this.enemy2 = new Enemy({
+      x: 1200,
+      y: 500,
+      a: 270,
+      c: 'yellow',
+      h: 60,
+      w: 90
+    }, ball, player);
+    _this.enemy3 = new Enemy({
+      x: 1200,
+      y: 1000,
+      a: 180,
+      c: 'red',
+      h: 50,
+      w: 80
+    }, ball, player);
+    _this.enemy4 = new Enemy({
+      x: 250,
+      y: 1500,
+      a: 180,
+      c: 'purple',
+      h: 50,
+      w: 80
+    }, ball, player);
     return _this;
   }
 
   _createClass(EnemyVehicle, [{
-    key: "calcNextPos",
-    value: function calcNextPos() {
-      if (this.currentX > 640 && this.currentX < 800 && this.moveRight === true) {
-        this.currentX += 1;
-      } else if (this.currentX === 800) {
-        this.moveRight = false;
-        this.currentX -= 1;
-      } else if (this.currentX === 640) {
-        this.moveRight = true;
-        this.currentX += 1;
-      } else if (this.moveRight === false) {
-        this.currentX -= 1;
-      }
-    }
-  }, {
     key: "draw",
     value: function draw(ctx) {
-      var _this2 = this;
-
-      this.detectBall();
-      this.calcNextPos(); // ctx.save()
-
-      this.vehicle = new Image();
-
-      this.vehicle.onload = function () {
-        ctx.drawImage(_this2.vehicle, _this2.currentX, _this2.currentY, -(_this2.vehicle.width / 4), -(_this2.vehicle.height / 4));
-      };
-
-      this.vehicle.src = 'public/images/car_imgs/red_car.png'; // ctx.restore()
+      this.enemyGoalie.draw(ctx, 'horz');
+      this.enemy1.draw(ctx, 'vert');
+      this.enemy2.draw(ctx, 'vert');
+      this.enemy3.draw(ctx, 'horz');
+      this.enemy4.draw(ctx, 'horz');
     }
   }]);
 
@@ -301,7 +493,7 @@ var Game = /*#__PURE__*/function () {
     this.ball = new Ball(this.track);
     this.orb = new BlueOrbs();
     this.vehicle = new Vehicle(this.ball, this.orb);
-    this.enemyVehicle = new EnemyVehicle(this.ball);
+    this.enemyVehicle = new EnemyVehicle(this.ball, this.vehicle);
     this.goal = new Goal();
   }
 
@@ -593,11 +785,12 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
     _this = _super.call(this, ball);
     _this.ball = ball;
     _this.orb = orb;
-    _this.currentAngle = 0; // this.currentX = 75;
+    _this.health = 100;
+    _this.currentAngle = 180; // this.currentX = 75;
     // this.currentY = 950;
 
-    _this.currentX = 550;
-    _this.currentY = 400;
+    _this.currentX = 600;
+    _this.currentY = 550;
     _this.speed = 0;
     _this.currentSpeed = 0;
     _this.maxSpeed = 7;
@@ -610,21 +803,43 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
   _createClass(Vehicle, [{
     key: "rotateVehicle",
     value: function rotateVehicle(e) {
+      // e.preventDefault()
       if (e.key === 'q') {
         if (this.currentAngle <= -360) this.currentAngle = 0;
-        if (this.maxSpeed > this.currentSpeed) this.currentSpeed += 0.1;
-        this.currentAngle -= 5 + this.currentSpeed;
+
+        if (this.currentSpeed === 0) {
+          this.currentAngle -= 15;
+        } else {
+          if (this.maxSpeed > this.currentSpeed) {
+            this.speed += 0.1;
+            this.currentSpeed = Math.floor(this.speed);
+          }
+
+          this.currentAngle -= 15 + this.currentSpeed;
+        }
       } else if (e.key === 'e') {
         if (this.currentAngle >= 360) this.currentAngle = 0;
-        if (this.maxSpeed > this.currentSpeed) this.currentSpeed += 0.1;
-        this.currentAngle += 5 + this.currentSpeed;
+
+        if (this.currentSpeed === 0) {
+          this.currentAngle += 15;
+        } else {
+          if (this.maxSpeed > this.currentSpeed) {
+            this.speed += 0.1;
+            this.currentSpeed = Math.floor(this.speed);
+          }
+
+          ;
+          this.currentAngle += 15 + this.currentSpeed;
+        }
       }
     }
   }, {
     key: "moveVehicle",
     value: function moveVehicle(e) {
+      e.preventDefault();
+
       if (e.key === 'w' && this.maxSpeed > this.speed && e.type === 'keydown') {
-        this.speed += 0.4;
+        this.speed += 0.6;
       } else if (e.key === 's' && e.type === 'keydown') {
         this.speed -= 0.1;
       }
@@ -645,14 +860,20 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
   }, {
     key: "reduceSpeed",
     value: function reduceSpeed(e) {
+      var _this2 = this;
+
       e.preventDefault();
 
       if (e.code === 'Space' && this.speed >= 0.4) {
-        this.speed -= 0.4;
+        this.speed -= 0.5;
       } else if (e.key === 'w' && this.speed > 0) {
-        this.speed -= this.speed / 2;
+        this.speed /= 2;
+        setTimeout(function () {
+          _this2.speed /= 2;
+          _this2.currentSpeed = Math.floor(_this2.speed);
+        }, 500);
       } else if (this.speed < 0) {
-        this.speed += 0.4;
+        this.speed += 0.5;
       }
 
       this.currentSpeed = Math.floor(this.speed);
@@ -660,14 +881,12 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
   }, {
     key: "testFunc",
     value: function testFunc() {
-      console.log(this.currentX);
-      console.log(this.ball.currentX);
-      console.log(this.ballDistance);
+      console.log(this.health);
     }
   }, {
     key: "detectOrb",
     value: function detectOrb() {
-      var _this2 = this;
+      var _this3 = this;
 
       for (var i = 0; i < this.orb.xPos.length; i++) {
         var orbDistance = this.findDistance(this.currentX, this.currentY, this.orb.xPos[i], this.orb.yPos[i]);
@@ -675,36 +894,67 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
         if (orbDistance <= 60) {
           this.orbDetected = true;
           setTimeout(function () {
-            return _this2.orbDetected = false;
+            return _this3.orbDetected = false;
           }, 5000);
+        }
+      }
+    }
+  }, {
+    key: "calcEnemyMove",
+    value: function calcEnemyMove(dir) {
+      if (dir === 'vert') {
+        if (this.currentY > this.startPos[1] && this.currentY < this.nextY && this.moveDir) {
+          this.currentY++;
+        } else if (this.currentY === this.startPos[1]) {
+          this.moveDir = true;
+          this.currentAngle += 180;
+          this.currentY++;
+        } else if (this.currentY === this.nextY) {
+          this.moveDir = false;
+          this.currentAngle -= 180;
+          this.currentY--;
+        } else if (this.moveDir === false) {
+          this.currentY--;
+        }
+      } else if (dir === 'horz') {
+        if (this.currentX > this.startPos[0] && this.currentX < this.nextX && this.moveDir) {
+          this.currentX++;
+        } else if (this.currentX === this.startPos[0]) {
+          this.moveDir = true;
+          this.currentX++;
+        } else if (this.currentX === this.nextX) {
+          this.moveDir = false;
+          this.currentX--;
+        } else if (this.moveDir === false) {
+          this.currentX--;
         }
       }
     }
   }, {
     key: "draw",
     value: function draw(ctx) {
-      var _this3 = this;
+      var _this4 = this;
 
       this.detectBall(); // this.detectOrb();
       // window.scroll(this.currentX, this.currentY / 2)
 
       if (this.currentX > 1425) this.currentAngle = 180;
       if (this.currentX < 0) this.currentAngle = 360;
-      if (this.currentY > 1000) this.currentAngle = 270;
+      if (this.currentY > 2000) this.currentAngle = 270;
       if (this.currentY < 0) this.currentAngle = 90;
       this.currentX += this.currentSpeed * Math.cos(Math.PI / 180 * this.currentAngle);
       this.currentY += this.currentSpeed * Math.sin(Math.PI / 180 * this.currentAngle);
       this.vehicle = new Image();
-      this.vehicle.src = "public/images/car_imgs/270.png";
+      this.vehicle.src = "public/images/car_imgs/black_car.png";
       this.vehicle.width = 80;
       this.vehicle.height = 40;
 
       this.vehicle.onload = function () {
-        ctx.clearRect(0, 0, 1425, 1000);
+        ctx.clearRect(0, 0, 1425, 2000);
         ctx.save();
-        ctx.translate(_this3.currentX, _this3.currentY);
-        ctx.rotate(Math.PI / 180 * _this3.currentAngle);
-        ctx.drawImage(_this3.vehicle, -(_this3.vehicle.width / 2), -(_this3.vehicle.height / 2), _this3.vehicle.width, _this3.vehicle.height);
+        ctx.translate(_this4.currentX, _this4.currentY);
+        ctx.rotate(Math.PI / 180 * _this4.currentAngle);
+        ctx.drawImage(_this4.vehicle, -(_this4.vehicle.width / 2), -(_this4.vehicle.height / 2), _this4.vehicle.width, _this4.vehicle.height);
         ctx.restore();
       };
     }
@@ -715,21 +965,6 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
 
 ;
 module.exports = Vehicle;
-/*
-let bgCtx = document.getElementById('bg-canvas').getContext('2d');
-        let sCtx = document.getElementById('static-canvas').getContext('2d')
-bgCtx.save()
-        sCtx.save()
-        ctx.rotate(this.currentDir * Math.PI/180);
-        bgCtx.rotate(this.currentDir * Math.PI/180);
-        sCtx.rotate(this.currentDir * Math.PI/180);
- bgCtx.translate(-this.currentX, -this.currentY);
-        sCtx.translate(-this.currentX, -this.currentY);
- bgCtx.restore()
-        
-        
-        sCtx.restore()
-*/
 
 /***/ }),
 
