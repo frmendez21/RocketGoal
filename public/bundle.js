@@ -44,7 +44,7 @@ var Ball = /*#__PURE__*/function (_MovingObject) {
     _this = _super.call(this);
     _this.track = track;
     _this.currentX = 500;
-    _this.currentY = 550;
+    _this.currentY = 1900;
     _this.velocity = 0;
     _this.currentAngle = 0;
     _this.impact = document.getElementById('impact');
@@ -407,7 +407,7 @@ var EnemyVehicle = /*#__PURE__*/function (_Vehicle) {
     _this.enemyGoalie = new EnemyGoalie([600, 100], ball);
     _this.enemy1 = new Enemy({
       x: 250,
-      y: 500,
+      y: 800,
       a: 270,
       c: 'green',
       h: 80,
@@ -423,19 +423,27 @@ var EnemyVehicle = /*#__PURE__*/function (_Vehicle) {
     }, ball, player);
     _this.enemy3 = new Enemy({
       x: 1200,
-      y: 1000,
+      y: 1200,
       a: 180,
       c: 'red',
       h: 50,
       w: 80
     }, ball, player);
     _this.enemy4 = new Enemy({
-      x: 250,
+      x: 100,
       y: 1500,
-      a: 180,
+      a: 0,
       c: 'purple',
-      h: 50,
+      h: 40,
       w: 80
+    }, ball, player);
+    _this.enemy5 = new Enemy({
+      x: 1200,
+      y: 1750,
+      a: 270,
+      c: 'pink',
+      h: 50,
+      w: 90
     }, ball, player);
     return _this;
   }
@@ -448,6 +456,7 @@ var EnemyVehicle = /*#__PURE__*/function (_Vehicle) {
       this.enemy2.draw(ctx, 'vert');
       this.enemy3.draw(ctx, 'horz');
       this.enemy4.draw(ctx, 'horz');
+      this.enemy5.draw(ctx, 'vert');
     }
   }]);
 
@@ -539,7 +548,7 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 var GameView = /*#__PURE__*/function () {
-  function GameView(game, ctx, bgCtx, stCtx) {
+  function GameView(game, ctx, stCtx) {
     _classCallCheck(this, GameView);
 
     this.game = game;
@@ -670,10 +679,10 @@ module.exports = MovingObject;
 
 /***/ }),
 
-/***/ "./public/javascripts/track.js":
-/*!*************************************!*\
-  !*** ./public/javascripts/track.js ***!
-  \*************************************/
+/***/ "./public/javascripts/tile.js":
+/*!************************************!*\
+  !*** ./public/javascripts/tile.js ***!
+  \************************************/
 /***/ ((module) => {
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -682,14 +691,242 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+var Tile = /*#__PURE__*/function () {
+  function Tile(options) {
+    _classCallCheck(this, Tile);
+
+    this.options = options;
+  }
+
+  _createClass(Tile, [{
+    key: "draw",
+    value: function draw(ctx) {
+      var _this = this;
+
+      var tile = new Image();
+      tile.src = "public/images/track/tile".concat(this.options.n, ".png");
+      tile.width = this.options.w;
+      tile.height = this.options.h;
+
+      tile.onload = function () {
+        ctx.drawImage(tile, _this.options.x, _this.options.y, tile.width, tile.height);
+      };
+    }
+  }]);
+
+  return Tile;
+}();
+
+module.exports = Tile;
+
+/***/ }),
+
+/***/ "./public/javascripts/track.js":
+/*!*************************************!*\
+  !*** ./public/javascripts/track.js ***!
+  \*************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Tile = __webpack_require__(/*! ./tile */ "./public/javascripts/tile.js");
+
 var Track = /*#__PURE__*/function () {
   function Track() {
     _classCallCheck(this, Track);
+
+    this.group1 = {
+      tile1: new Tile({
+        n: '01',
+        x: '0',
+        y: '1750',
+        h: '30',
+        w: '1000'
+      }),
+      tile2: new Tile({
+        n: '04',
+        x: '1000',
+        y: '1750',
+        h: '30',
+        w: '60'
+      }),
+      tile3: new Tile({
+        n: '06',
+        x: '1000',
+        y: '1720',
+        h: '30',
+        w: '60'
+      }),
+      tile4: new Tile({
+        n: '10',
+        x: '0',
+        y: '1720',
+        h: '30',
+        w: '1000'
+      })
+    };
+    this.group2 = {
+      tile1: new Tile({
+        n: '01',
+        x: '825',
+        y: '1400',
+        h: '30',
+        w: '600'
+      }),
+      tile2: new Tile({
+        n: '05',
+        x: '765',
+        y: '1400',
+        h: '30',
+        w: '60'
+      }),
+      tile3: new Tile({
+        n: '07',
+        x: '760',
+        y: '1370',
+        h: '30',
+        w: '65'
+      }),
+      tile4: new Tile({
+        n: '10',
+        x: '820',
+        y: '1370',
+        h: '30',
+        w: '605'
+      })
+    };
+    this.group3 = {
+      tile1: new Tile({
+        n: '01',
+        x: '0',
+        y: '1150',
+        h: '30',
+        w: '350'
+      }),
+      tile2: new Tile({
+        n: '04',
+        x: '350',
+        y: '1150',
+        h: '30',
+        w: '60'
+      }),
+      tile3: new Tile({
+        n: '06',
+        x: '350',
+        y: '1120',
+        h: '30',
+        w: '60'
+      }),
+      tile4: new Tile({
+        n: '10',
+        x: '0',
+        y: '1121',
+        h: '29',
+        w: '350'
+      })
+    };
+    this.group4 = {
+      tile1: new Tile({
+        n: '01',
+        x: '1125',
+        y: '800',
+        h: '30',
+        w: '300'
+      }),
+      tile2: new Tile({
+        n: '05',
+        x: '1065',
+        y: '800',
+        h: '30',
+        w: '60'
+      }),
+      tile3: new Tile({
+        n: '07',
+        x: '1060',
+        y: '770',
+        h: '30',
+        w: '65'
+      }),
+      tile4: new Tile({
+        n: '10',
+        x: '1125',
+        y: '770',
+        h: '30',
+        w: '300'
+      })
+    };
+    this.group5 = {
+      tile17: new Tile({
+        n: '01',
+        x: '650',
+        y: '600',
+        h: '30',
+        w: '250'
+      }),
+      tile18: new Tile({
+        n: '05',
+        x: '590',
+        y: '600',
+        h: '30',
+        w: '60'
+      }),
+      tile19: new Tile({
+        n: '07',
+        x: '585',
+        y: '570',
+        h: '30',
+        w: '65'
+      }),
+      tile20: new Tile({
+        n: '10',
+        x: '650',
+        y: '570',
+        h: '30',
+        w: '250'
+      }),
+      tile21: new Tile({
+        n: '06',
+        x: '900',
+        y: '569',
+        h: '30',
+        w: '60'
+      }),
+      tile22: new Tile({
+        n: '04',
+        x: '900',
+        y: '599',
+        h: '30',
+        w: '60'
+      })
+    };
   }
 
   _createClass(Track, [{
     key: "draw",
-    value: function draw(ctx) {}
+    value: function draw(ctx) {
+      Object.values(this.group1).forEach(function (tile) {
+        tile.draw(ctx);
+      });
+      Object.values(this.group2).forEach(function (tile) {
+        tile.draw(ctx);
+      });
+      Object.values(this.group3).forEach(function (tile) {
+        tile.draw(ctx);
+      });
+      Object.values(this.group3).forEach(function (tile) {
+        tile.draw(ctx);
+      });
+      Object.values(this.group4).forEach(function (tile) {
+        tile.draw(ctx);
+      });
+      Object.values(this.group5).forEach(function (tile) {
+        tile.draw(ctx);
+      });
+    }
   }]);
 
   return Track;
@@ -697,48 +934,6 @@ var Track = /*#__PURE__*/function () {
 
 ;
 module.exports = Track;
-/* 
-ctx.beginPath()
-        ctx.moveTo(0, 875)
-        ctx.lineTo(1250, 875)
-        ctx.lineTo(1250, 825)
-        ctx.lineTo(50, 825)
-        ctx.lineTo(50, 775)
-        ctx.lineTo(25, 775)
-        ctx.lineTo(25, 625)
-        ctx.lineTo(1250, 625)
-        ctx.lineTo(1250, 525)
-        ctx.lineTo(400, 525)
-        ctx.lineTo(400, 600)
-        ctx.lineTo(25, 600)
-        ctx.lineTo(25, 300)
-        ctx.lineTo(50, 300)
-        ctx.lineTo(1250, 300)
-        ctx.lineTo(1250, 275)
-        ctx.lineTo(600, 275)
-        ctx.lineTo(600, 100)
-        ctx.lineWidth = 12;
-        ctx.strokeStyle = 'white';
-        ctx.stroke()
-
-        ctx.beginPath()
-        ctx.moveTo(0, 990)
-        ctx.lineTo(1415, 990)
-        ctx.lineTo(1415, 725)
-        ctx.lineTo(150, 725)
-        ctx.lineTo(150, 700)
-        ctx.lineTo(1415, 700)
-        ctx.lineTo(1415, 400)
-        ctx.lineTo(150, 400)
-        ctx.lineTo(150, 375)
-        ctx.lineTo(1415, 375)
-        ctx.lineTo(1415, 200)
-        ctx.lineTo(800, 200)
-        ctx.lineTo(800, 100)
-        ctx.lineWidth = 12;
-        ctx.strokeStyle = 'white';
-        ctx.stroke()
-*/
 
 /***/ }),
 
@@ -777,20 +972,17 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
 
   var _super = _createSuper(Vehicle);
 
-  function Vehicle(ball, orb) {
+  function Vehicle(ball) {
     var _this;
 
     _classCallCheck(this, Vehicle);
 
     _this = _super.call(this, ball);
     _this.ball = ball;
-    _this.orb = orb;
     _this.health = 100;
-    _this.currentAngle = 180; // this.currentX = 75;
-    // this.currentY = 950;
-
-    _this.currentX = 600;
-    _this.currentY = 550;
+    _this.currentAngle = 0;
+    _this.currentX = 50;
+    _this.currentY = 1900;
     _this.speed = 0;
     _this.currentSpeed = 0;
     _this.maxSpeed = 7;
@@ -803,7 +995,6 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
   _createClass(Vehicle, [{
     key: "rotateVehicle",
     value: function rotateVehicle(e) {
-      // e.preventDefault()
       if (e.key === 'q') {
         if (this.currentAngle <= -360) this.currentAngle = 0;
 
@@ -876,28 +1067,8 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
         this.speed += 0.5;
       }
 
+      ;
       this.currentSpeed = Math.floor(this.speed);
-    }
-  }, {
-    key: "testFunc",
-    value: function testFunc() {
-      console.log(this.health);
-    }
-  }, {
-    key: "detectOrb",
-    value: function detectOrb() {
-      var _this3 = this;
-
-      for (var i = 0; i < this.orb.xPos.length; i++) {
-        var orbDistance = this.findDistance(this.currentX, this.currentY, this.orb.xPos[i], this.orb.yPos[i]);
-
-        if (orbDistance <= 60) {
-          this.orbDetected = true;
-          setTimeout(function () {
-            return _this3.orbDetected = false;
-          }, 5000);
-        }
-      }
     }
   }, {
     key: "calcEnemyMove",
@@ -933,10 +1104,9 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
   }, {
     key: "draw",
     value: function draw(ctx) {
-      var _this4 = this;
+      var _this3 = this;
 
-      this.detectBall(); // this.detectOrb();
-      // window.scroll(this.currentX, this.currentY / 2)
+      this.detectBall(); // window.scroll(this.currentX, this.currentY / 2)
 
       if (this.currentX > 1425) this.currentAngle = 180;
       if (this.currentX < 0) this.currentAngle = 360;
@@ -952,9 +1122,9 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
       this.vehicle.onload = function () {
         ctx.clearRect(0, 0, 1425, 2000);
         ctx.save();
-        ctx.translate(_this4.currentX, _this4.currentY);
-        ctx.rotate(Math.PI / 180 * _this4.currentAngle);
-        ctx.drawImage(_this4.vehicle, -(_this4.vehicle.width / 2), -(_this4.vehicle.height / 2), _this4.vehicle.width, _this4.vehicle.height);
+        ctx.translate(_this3.currentX, _this3.currentY);
+        ctx.rotate(Math.PI / 180 * _this3.currentAngle);
+        ctx.drawImage(_this3.vehicle, -(_this3.vehicle.width / 2), -(_this3.vehicle.height / 2), _this3.vehicle.width, _this3.vehicle.height);
         ctx.restore();
       };
     }

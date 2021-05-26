@@ -1,17 +1,13 @@
 const MovingObject = require("./moving_objects");
 
 class Vehicle extends MovingObject{
-    constructor(ball, orb) {
+    constructor(ball) {
         super(ball)
-    
         this.ball = ball;
-        this.orb = orb;
         this.health = 100;
-        this.currentAngle = 180;
-        // this.currentX = 75;
-        // this.currentY = 950;
-        this.currentX = 600;
-        this.currentY = 550;
+        this.currentAngle = 0;
+        this.currentX = 50;
+        this.currentY = 1900;
         this.speed = 0;
         this.currentSpeed = 0;
         this.maxSpeed = 7;
@@ -23,7 +19,6 @@ class Vehicle extends MovingObject{
 
     
     rotateVehicle(e) {
-        // e.preventDefault()
         if(e.key === 'q') {
             if(this.currentAngle <= -360) this.currentAngle = 0;
             if(this.currentSpeed === 0) {
@@ -68,8 +63,6 @@ class Vehicle extends MovingObject{
           this.ball.vehicleHit(this.currentAngle, this.currentSpeed);
         }
     }
-
-    
    
     reduceSpeed(e) {
         e.preventDefault(); 
@@ -83,26 +76,10 @@ class Vehicle extends MovingObject{
             }, 500)
         } else if(this.speed < 0) {
             this.speed += 0.5;
-        }
+        };
         this.currentSpeed = Math.floor(this.speed)
-    
-    }
+    };
 
-    testFunc() {
-        console.log(this.health)
-    }
-
-
-    detectOrb () {
-
-        for(let i = 0; i < this.orb.xPos.length; i++) {
-            let orbDistance = this.findDistance(this.currentX, this.currentY, this.orb.xPos[i], this.orb.yPos[i])
-            if(orbDistance <= 60) {
-                this.orbDetected = true;
-                setTimeout(() => this.orbDetected = false, 5000)
-            }
-        }
-    }
     calcEnemyMove(dir) {
     if(dir === 'vert'){
         if((this.currentY > this.startPos[1] && this.currentY < this.nextY ) && this.moveDir) {
@@ -135,7 +112,7 @@ class Vehicle extends MovingObject{
  
     draw(ctx) {
         this.detectBall();
-        // this.detectOrb();
+
         // window.scroll(this.currentX, this.currentY / 2)
         if(this.currentX > 1425) this.currentAngle = 180;
         if(this.currentX < 0) this.currentAngle = 360;

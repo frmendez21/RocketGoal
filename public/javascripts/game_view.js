@@ -1,5 +1,5 @@
 class GameView {
-    constructor(game, ctx, bgCtx, stCtx) {
+    constructor(game, ctx, stCtx) {
         this.game = game;
         this.vehicle = this.game.vehicle
         this.ctx = ctx;

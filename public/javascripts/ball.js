@@ -5,7 +5,7 @@ class Ball extends MovingObject{
         super()
         this.track = track;
         this.currentX = 500;
-        this.currentY = 550;
+        this.currentY = 1900;
         this.velocity = 0;
         this.currentAngle = 0;
         this.impact =  document.getElementById('impact');
