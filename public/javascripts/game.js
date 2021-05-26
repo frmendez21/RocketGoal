@@ -12,7 +12,7 @@ class Game {
         this.track = new Track;
         this.ball = new Ball(this.track);
         this.orb = new BlueOrbs;
-        this.vehicle = new Vehicle(this.ball, this.orb);
+        this.vehicle = new Vehicle(this.ball, this.track);
         this.enemyVehicle = new EnemyVehicle(this.ball, this.vehicle);
         this.goal = new Goal;
     }

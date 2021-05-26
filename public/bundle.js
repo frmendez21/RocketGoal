@@ -501,7 +501,7 @@ var Game = /*#__PURE__*/function () {
     this.track = new Track();
     this.ball = new Ball(this.track);
     this.orb = new BlueOrbs();
-    this.vehicle = new Vehicle(this.ball, this.orb);
+    this.vehicle = new Vehicle(this.ball, this.track);
     this.enemyVehicle = new EnemyVehicle(this.ball, this.vehicle);
     this.goal = new Goal();
   }
@@ -667,8 +667,38 @@ var MovingObject = /*#__PURE__*/function () {
   _createClass(MovingObject, [{
     key: "findDistance",
     value: function findDistance(x1, y1, x2, y2) {
-      //    return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
-      return Math.hypot(x2 - x1, y2 - y1);
+      return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2)); // return Math.hypot(x2-x1, y2-y1)
+    }
+  }, {
+    key: "calcEnemyMove",
+    value: function calcEnemyMove(dir) {
+      if (dir === 'vert') {
+        if (this.currentY > this.startPos[1] && this.currentY < this.nextY && this.moveDir) {
+          this.currentY++;
+        } else if (this.currentY === this.startPos[1]) {
+          this.moveDir = true;
+          this.currentAngle += 180;
+          this.currentY++;
+        } else if (this.currentY === this.nextY) {
+          this.moveDir = false;
+          this.currentAngle -= 180;
+          this.currentY--;
+        } else if (this.moveDir === false) {
+          this.currentY--;
+        }
+      } else if (dir === 'horz') {
+        if (this.currentX > this.startPos[0] && this.currentX < this.nextX && this.moveDir) {
+          this.currentX++;
+        } else if (this.currentX === this.startPos[0]) {
+          this.moveDir = true;
+          this.currentX++;
+        } else if (this.currentX === this.nextX) {
+          this.moveDir = false;
+          this.currentX--;
+        } else if (this.moveDir === false) {
+          this.currentX--;
+        }
+      }
     }
   }]);
 
@@ -972,13 +1002,14 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
 
   var _super = _createSuper(Vehicle);
 
-  function Vehicle(ball) {
+  function Vehicle(ball, track) {
     var _this;
 
     _classCallCheck(this, Vehicle);
 
-    _this = _super.call(this, ball);
+    _this = _super.call(this, ball, track);
     _this.ball = ball;
+    _this.track = track;
     _this.health = 100;
     _this.currentAngle = 0;
     _this.currentX = 50;
@@ -989,6 +1020,7 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
     _this.boostedSpeed = 8;
     _this.ballDistance = 0;
     _this.orbDetected = false;
+    _this.barrierDetected = false;
     return _this;
   }
 
@@ -1049,6 +1081,30 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
       }
     }
   }, {
+    key: "detectBarrier",
+    value: function detectBarrier() {
+      var group;
+      if (this.currentY >= 1700 && this.currentY < 2000) group = this.track.group1;
+      if (this.currentY >= 1300 && this.currentY < 1700) group = this.track.group2;
+      if (this.currentY >= 1100 && this.currentY < 1300) group = this.track.group3;
+      if (this.currentY >= 700 && this.currentY < 1100) group = this.track.group4;
+      if (this.currentY >= 500 && this.currentY < 700) group = this.track.group5;
+
+      for (tile in group) {
+        var x = Number(group[tile].options.x);
+        var w = Number(group[tile].options.w);
+        var y = Number(group[tile].options.y);
+        var dist = this.findDistance(this.currentX, this.currentY, this.currentX, y);
+
+        if (dist <= 50) {
+          if ((group === this.track.group1 || group === this.track.group3) && this.currentX >= x && this.currentX <= w) this.barrierDetected = true;
+          if ((group === this.track.group2 || group === this.track.group4) && this.currentX >= x) this.barrierDetected = true; // if((group === this.track.group5) && ((this.currentX >= x) || (this.currentX >=x ))) this.barrierDetected = true;
+        }
+      }
+
+      ;
+    }
+  }, {
     key: "reduceSpeed",
     value: function reduceSpeed(e) {
       var _this2 = this;
@@ -1056,7 +1112,7 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
       e.preventDefault();
 
       if (e.code === 'Space' && this.speed >= 0.4) {
-        this.speed -= 0.5;
+        this.speed -= 0.4;
       } else if (e.key === 'w' && this.speed > 0) {
         this.speed /= 2;
         setTimeout(function () {
@@ -1071,42 +1127,19 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
       this.currentSpeed = Math.floor(this.speed);
     }
   }, {
-    key: "calcEnemyMove",
-    value: function calcEnemyMove(dir) {
-      if (dir === 'vert') {
-        if (this.currentY > this.startPos[1] && this.currentY < this.nextY && this.moveDir) {
-          this.currentY++;
-        } else if (this.currentY === this.startPos[1]) {
-          this.moveDir = true;
-          this.currentAngle += 180;
-          this.currentY++;
-        } else if (this.currentY === this.nextY) {
-          this.moveDir = false;
-          this.currentAngle -= 180;
-          this.currentY--;
-        } else if (this.moveDir === false) {
-          this.currentY--;
-        }
-      } else if (dir === 'horz') {
-        if (this.currentX > this.startPos[0] && this.currentX < this.nextX && this.moveDir) {
-          this.currentX++;
-        } else if (this.currentX === this.startPos[0]) {
-          this.moveDir = true;
-          this.currentX++;
-        } else if (this.currentX === this.nextX) {
-          this.moveDir = false;
-          this.currentX--;
-        } else if (this.moveDir === false) {
-          this.currentX--;
-        }
-      }
-    }
-  }, {
     key: "draw",
     value: function draw(ctx) {
       var _this3 = this;
 
-      this.detectBall(); // window.scroll(this.currentX, this.currentY / 2)
+      this.detectBall();
+      this.detectBarrier();
+
+      if (this.barrierDetected) {
+        Math.abs(this.currentAngle) < 180 ? this.currentAngle += 180 : this.currentAngle -= 180;
+      }
+
+      ;
+      this.barrierDetected = false; // window.scroll(this.currentX, (this.currentY))
 
       if (this.currentX > 1425) this.currentAngle = 180;
       if (this.currentX < 0) this.currentAngle = 360;

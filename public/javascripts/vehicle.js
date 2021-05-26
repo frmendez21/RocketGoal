@@ -1,9 +1,10 @@
 const MovingObject = require("./moving_objects");
 
 class Vehicle extends MovingObject{
-    constructor(ball) {
-        super(ball)
+    constructor(ball, track) {
+        super(ball, track)
         this.ball = ball;
+        this.track = track;
         this.health = 100;
         this.currentAngle = 0;
         this.currentX = 50;
@@ -14,7 +15,7 @@ class Vehicle extends MovingObject{
         this.boostedSpeed = 8;
         this.ballDistance = 0; 
         this.orbDetected = false;
-
+        this.barrierDetected = false;
     };
 
     
@@ -63,11 +64,34 @@ class Vehicle extends MovingObject{
           this.ball.vehicleHit(this.currentAngle, this.currentSpeed);
         }
     }
+
+
+    detectBarrier() {
+        let group;
+        if(this.currentY >= 1700 && this.currentY < 2000) group = this.track.group1;
+        if(this.currentY >= 1300 && this.currentY < 1700) group = this.track.group2;
+        if(this.currentY >= 1100 && this.currentY < 1300) group = this.track.group3;
+        if(this.currentY >= 700 && this.currentY < 1100) group = this.track.group4;
+        if(this.currentY >= 500 && this.currentY < 700) group = this.track.group5;
+        for(tile in group) {
+            let x = Number(group[tile].options.x)
+            let w = Number(group[tile].options.w)
+            let y = Number(group[tile].options.y)
+            let dist = this.findDistance(this.currentX, this.currentY, this.currentX, y);
+
+            if(dist <= 50) {
+                if((group === this.track.group1 || group === this.track.group3) && (this.currentX >= x && this.currentX <= w)) this.barrierDetected = true;
+                if((group === this.track.group2 || group === this.track.group4) && (this.currentX >= x)) this.barrierDetected = true;
+                // if((group === this.track.group5) && ((this.currentX >= x) || (this.currentX >=x ))) this.barrierDetected = true;
+            }
+        };
+    };
+    
    
     reduceSpeed(e) {
         e.preventDefault(); 
         if(e.code === 'Space' && this.speed >= 0.4) {
-            this.speed -= 0.5;
+            this.speed -= 0.4;
         } else if(e.key === 'w' && this.speed > 0){
             this.speed /= 2;
             setTimeout(() => {
@@ -80,40 +104,16 @@ class Vehicle extends MovingObject{
         this.currentSpeed = Math.floor(this.speed)
     };
 
-    calcEnemyMove(dir) {
-    if(dir === 'vert'){
-        if((this.currentY > this.startPos[1] && this.currentY < this.nextY ) && this.moveDir) {
-            this.currentY ++;
-        } else if (this.currentY === this.startPos[1]) {
-            this.moveDir = true;
-            this.currentAngle += 180;
-            this.currentY ++;
-        } else if(this.currentY === this.nextY) {
-            this.moveDir = false;
-            this.currentAngle -= 180
-            this.currentY --;
-        } else if(this.moveDir === false) {
-            this.currentY --;
-        }
-    } else if(dir === 'horz') {
-        if((this.currentX > this.startPos[0] && this.currentX < this.nextX ) && this.moveDir) {
-            this.currentX ++;
-        } else if (this.currentX === this.startPos[0]) {
-            this.moveDir = true;
-            this.currentX ++;
-        } else if(this.currentX === this.nextX) {
-            this.moveDir = false;
-            this.currentX --;
-        } else if(this.moveDir === false) {
-            this.currentX --;
-        }
-    }
-   };
+   
  
     draw(ctx) {
         this.detectBall();
-
-        // window.scroll(this.currentX, this.currentY / 2)
+        this.detectBarrier();
+        if(this.barrierDetected) {
+            Math.abs(this.currentAngle) < 180 ? this.currentAngle += 180 : this.currentAngle -= 180;
+        };
+        this.barrierDetected = false;
+        // window.scroll(this.currentX, (this.currentY))
         if(this.currentX > 1425) this.currentAngle = 180;
         if(this.currentX < 0) this.currentAngle = 360;
         if(this.currentY > 2000) this.currentAngle = 270;
@@ -133,8 +133,6 @@ class Vehicle extends MovingObject{
             ctx.drawImage(this.vehicle, -(this.vehicle.width / 2), -(this.vehicle.height / 2), this.vehicle.width, this.vehicle.height);
             ctx.restore();
         }
-        
-        
     };
 };
 
