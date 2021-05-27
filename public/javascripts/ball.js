@@ -8,13 +8,14 @@ class Ball extends MovingObject{
         this.currentY = 1900;
         this.velocity = 0;
         this.currentAngle = 0;
+        this.barrierDetected = false;
         this.impact =  document.getElementById('impact');
         this.impact.volume = 0.3;
     }
 
     vehicleHit(angle, speed) {
         clearTimeout(this.vehicleHit, 100)
-        if(speed !== 0) this.impact.play()
+        this.impact.play()
         this.currentAngle = angle;
         this.velocity = (speed * 2);
         setTimeout(() => this.velocity = 0, speed * 100)
@@ -42,8 +43,17 @@ class Ball extends MovingObject{
 
     draw(ctx) {
         // this.detectGoal();
-        // this.detectTrack()
-        
+        this.detectBarrier(); 
+        if(this.barrierDetected) {
+            if(Math.abs(this.currentAngle) < 180) {
+                this.currentAngle += 180;
+                this.currentY += (this.velocity + 2);
+            } else {
+                this.currentAngle -= 180;
+                this.currentY -= (this.velocity + 2);
+            }
+        };
+        this.barrierDetected = false;
         this.detectBounds();
         this.currentX += (this.velocity * Math.cos(Math.PI/180 * this.currentAngle))
         this.currentY += (this.velocity * Math.sin(Math.PI/180 * this.currentAngle))

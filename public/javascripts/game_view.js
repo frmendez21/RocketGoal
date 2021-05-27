@@ -13,10 +13,12 @@ class GameView {
             if(e.key === 'w' || e.key === 's') this.vehicle.moveVehicle(e)
             if(e.key === 'f') this.vehicle.testFunc()
             if(e.code === 'Space') this.vehicle.reduceSpeed(e);
+            if(e.code === 'ShiftLeft') this.vehicle.activateBoost(e);
         
         });
         document.addEventListener('keyup', e => {
             if(e.key === 'w') this.vehicle.reduceSpeed(e); 
+            if(e.key === "Shift") this.vehicle.deactivateBoost();
         })
     };
     restart() {

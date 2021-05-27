@@ -47,6 +47,7 @@ var Ball = /*#__PURE__*/function (_MovingObject) {
     _this.currentY = 1900;
     _this.velocity = 0;
     _this.currentAngle = 0;
+    _this.barrierDetected = false;
     _this.impact = document.getElementById('impact');
     _this.impact.volume = 0.3;
     return _this;
@@ -58,7 +59,7 @@ var Ball = /*#__PURE__*/function (_MovingObject) {
       var _this2 = this;
 
       clearTimeout(this.vehicleHit, 100);
-      if (speed !== 0) this.impact.play();
+      this.impact.play();
       this.currentAngle = angle;
       this.velocity = speed * 2;
       setTimeout(function () {
@@ -94,7 +95,20 @@ var Ball = /*#__PURE__*/function (_MovingObject) {
       var _this3 = this;
 
       // this.detectGoal();
-      // this.detectTrack()
+      this.detectBarrier();
+
+      if (this.barrierDetected) {
+        if (Math.abs(this.currentAngle) < 180) {
+          this.currentAngle += 180;
+          this.currentY += this.velocity + 2;
+        } else {
+          this.currentAngle -= 180;
+          this.currentY -= this.velocity + 2;
+        }
+      }
+
+      ;
+      this.barrierDetected = false;
       this.detectBounds();
       this.currentX += this.velocity * Math.cos(Math.PI / 180 * this.currentAngle);
       this.currentY += this.velocity * Math.sin(Math.PI / 180 * this.currentAngle);
@@ -120,9 +134,9 @@ module.exports = Ball;
 
 /***/ }),
 
-/***/ "./public/javascripts/blue_orbs.js":
+/***/ "./public/javascripts/boost_bar.js":
 /*!*****************************************!*\
-  !*** ./public/javascripts/blue_orbs.js ***!
+  !*** ./public/javascripts/boost_bar.js ***!
   \*****************************************/
 /***/ ((module) => {
 
@@ -132,43 +146,47 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var BlueOrbs = /*#__PURE__*/function () {
-  function BlueOrbs() {
-    _classCallCheck(this, BlueOrbs);
+var BoostBar = /*#__PURE__*/function () {
+  function BoostBar() {
+    _classCallCheck(this, BoostBar);
 
-    this.count = 0;
-    this.xPos = [350, 1375, 30, 1375, 1375];
-    this.yPos = [500, 950, 740, 50, 325];
-    this.height = 25;
-    this.width = 25;
+    this.boostLevel = 294;
   }
 
-  _createClass(BlueOrbs, [{
+  _createClass(BoostBar, [{
+    key: "decrementBoost",
+    value: function decrementBoost() {
+      if (this.boostLevel > 0) {
+        this.boostLevel -= 1;
+      }
+    }
+  }, {
+    key: "incrementBoost",
+    value: function incrementBoost() {
+      if (this.boostLevel < 294 && this.boostLevel >= 147) {
+        this.boostLevel = 294;
+      } else if (this.boostLevel < 147 && this.boostLevel >= 0) {
+        this.boostLevel = 147;
+      }
+    }
+  }, {
     key: "draw",
     value: function draw(ctx) {
-      var _this = this;
-
-      this.count >= 4 ? this.count = 0 : this.count++;
-      ctx.save();
-      this.orb = new Image();
-
-      this.orb.onload = function () {
-        ctx.drawImage(_this.orb, _this.xPos[0], _this.yPos[0], 25, 25);
-        ctx.drawImage(_this.orb, _this.xPos[1], _this.yPos[1], 25, 25);
-        ctx.drawImage(_this.orb, _this.xPos[2], _this.yPos[2], 25, 25);
-        ctx.drawImage(_this.orb, _this.xPos[3], _this.yPos[3], 25, 25);
-        ctx.drawImage(_this.orb, _this.xPos[4], _this.yPos[4], 25, 25);
-      };
-
-      this.orb.src = "public/images/orbs/".concat(this.count, ".png");
-      ctx.restore();
+      var y = window.scrollY + 170;
+      var x = 0;
+      ctx.strokeRect(x, y, 40, 300);
+      ctx.lineWidth = 5;
+      ctx.strokeStyle = 'rgb(45, 45, 50)';
+      ctx.fillRect(x + 3, y + 3, 35, this.boostLevel);
+      ctx.fillStyle = 'rgb(83, 210, 209)';
     }
   }]);
 
-  return BlueOrbs;
+  return BoostBar;
 }();
 
-module.exports = BlueOrbs;
+;
+module.exports = BoostBar;
 
 /***/ }),
 
@@ -485,23 +503,23 @@ var Ball = __webpack_require__(/*! ./ball */ "./public/javascripts/ball.js");
 
 var Track = __webpack_require__(/*! ./track */ "./public/javascripts/track.js");
 
-var Walls = __webpack_require__(/*! ./walls */ "./public/javascripts/walls.js");
-
 var Goal = __webpack_require__(/*! ./goal */ "./public/javascripts/goal.js");
 
-var BlueOrbs = __webpack_require__(/*! ./blue_orbs */ "./public/javascripts/blue_orbs.js");
+var Orbs = __webpack_require__(/*! ./orbs */ "./public/javascripts/orbs.js");
 
 var EnemyVehicle = __webpack_require__(/*! ./enemy_vehicle */ "./public/javascripts/enemy_vehicle.js");
+
+var BoostBar = __webpack_require__(/*! ./boost_bar */ "./public/javascripts/boost_bar.js");
 
 var Game = /*#__PURE__*/function () {
   function Game() {
     _classCallCheck(this, Game);
 
-    this.walls = new Walls();
     this.track = new Track();
     this.ball = new Ball(this.track);
-    this.orb = new BlueOrbs();
-    this.vehicle = new Vehicle(this.ball, this.track);
+    this.boostBar = new BoostBar();
+    this.vehicle = new Vehicle(this.ball, this.track, this.boostBar);
+    this.orbs = new Orbs(this.vehicle, this.boostBar);
     this.enemyVehicle = new EnemyVehicle(this.ball, this.vehicle);
     this.goal = new Goal();
   }
@@ -512,17 +530,17 @@ var Game = /*#__PURE__*/function () {
       this.vehicle.draw(ctx);
       this.ball.draw(ctx);
       this.enemyVehicle.draw(ctx);
+      this.boostBar.draw(ctx);
     }
   }, {
     key: "loadStatic",
     value: function loadStatic(sCtx) {
       var _this = this;
 
-      this.walls.draw(sCtx);
       this.track.draw(sCtx);
       this.goal.draw(sCtx);
       setInterval(function () {
-        return _this.orb.draw(sCtx);
+        return _this.orbs.draw(sCtx);
       }, 80);
     }
   }]);
@@ -569,9 +587,11 @@ var GameView = /*#__PURE__*/function () {
         if (e.key === 'w' || e.key === 's') _this.vehicle.moveVehicle(e);
         if (e.key === 'f') _this.vehicle.testFunc();
         if (e.code === 'Space') _this.vehicle.reduceSpeed(e);
+        if (e.code === 'ShiftLeft') _this.vehicle.activateBoost(e);
       });
       document.addEventListener('keyup', function (e) {
         if (e.key === 'w') _this.vehicle.reduceSpeed(e);
+        if (e.key === "Shift") _this.vehicle.deactivateBoost();
       });
     }
   }, {
@@ -700,12 +720,209 @@ var MovingObject = /*#__PURE__*/function () {
         }
       }
     }
+  }, {
+    key: "detectBarrier",
+    value: function detectBarrier() {
+      var group;
+      if (this.currentY >= 1700 && this.currentY < 2000) group = this.track.group1;
+      if (this.currentY >= 1300 && this.currentY < 1700) group = this.track.group2;
+      if (this.currentY >= 1100 && this.currentY < 1300) group = this.track.group3;
+      if (this.currentY >= 700 && this.currentY < 1100) group = this.track.group4;
+      if (this.currentY >= 500 && this.currentY < 700) group = this.track.group5;
+
+      for (tile in group) {
+        var x = Number(group[tile].options.x);
+        var w = Number(group[tile].options.w);
+        var y = Number(group[tile].options.y);
+        var dist = this.findDistance(this.currentX, this.currentY, this.currentX, y);
+
+        if (dist <= 50) {
+          if ((group === this.track.group1 || group === this.track.group3) && this.currentX >= x && this.currentX <= w) this.barrierDetected = true;
+          if ((group === this.track.group2 || group === this.track.group4) && this.currentX >= x) this.barrierDetected = true; // if((group === this.track.group5) && ((this.currentX >= x) || (this.currentX >=x ))) this.barrierDetected = true;
+        }
+      }
+
+      ;
+    }
   }]);
 
   return MovingObject;
 }();
 
 module.exports = MovingObject;
+
+/***/ }),
+
+/***/ "./public/javascripts/orb.js":
+/*!***********************************!*\
+  !*** ./public/javascripts/orb.js ***!
+  \***********************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var MovingObject = __webpack_require__(/*! ./moving_objects */ "./public/javascripts/moving_objects.js");
+
+var Orb = /*#__PURE__*/function (_MovingObject) {
+  _inherits(Orb, _MovingObject);
+
+  var _super = _createSuper(Orb);
+
+  function Orb(options, vehicle, boost) {
+    var _this;
+
+    _classCallCheck(this, Orb);
+
+    _this = _super.call(this);
+    _this.x = options.x;
+    _this.y = options.y;
+    _this.h = options.h;
+    _this.w = options.w;
+    _this.c = 0;
+    _this.vehicle = vehicle;
+    _this.boost = boost;
+    _this.active = true;
+    _this.sound = document.getElementById('orb');
+    _this.sound.volume = 0.5;
+    return _this;
+  }
+
+  _createClass(Orb, [{
+    key: "detectVehicle",
+    value: function detectVehicle() {
+      var dist = this.findDistance(this.x, this.y, this.vehicle.currentX, this.vehicle.currentY);
+
+      if (this.active && dist <= 45 && this.boost.boostLevel < 294) {
+        this.sound.play();
+        this.boost.incrementBoost();
+        this.active = false;
+      }
+
+      ;
+    }
+  }, {
+    key: "draw",
+    value: function draw(ctx) {
+      var _this2 = this;
+
+      this.detectVehicle();
+      this.c >= 4 ? this.c = 0 : this.c++;
+      ctx.save();
+      var orb = new Image();
+
+      if (this.active) {
+        orb.src = "public/images/orbs/".concat(this.c, ".png");
+
+        orb.onload = function () {
+          ctx.drawImage(orb, _this2.x, _this2.y, _this2.w, _this2.h);
+        };
+      } else {
+        orb.src = "public/images/orbs/pad.png";
+
+        orb.onload = function () {
+          ctx.drawImage(orb, _this2.x - 35, _this2.y - 35, 100, 100);
+        };
+      }
+
+      ctx.restore();
+    }
+  }]);
+
+  return Orb;
+}(MovingObject);
+
+;
+module.exports = Orb;
+
+/***/ }),
+
+/***/ "./public/javascripts/orbs.js":
+/*!************************************!*\
+  !*** ./public/javascripts/orbs.js ***!
+  \************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Orb = __webpack_require__(/*! ./orb */ "./public/javascripts/orb.js");
+
+var Orbs = /*#__PURE__*/function () {
+  function Orbs(vehicle, boost) {
+    _classCallCheck(this, Orbs);
+
+    this.orbs = [new Orb({
+      x: '350',
+      y: '500',
+      h: '25',
+      w: '25'
+    }, vehicle, boost), new Orb({
+      x: '1375',
+      y: '650',
+      h: '25',
+      w: '25'
+    }, vehicle, boost), new Orb({
+      x: '200',
+      y: '780',
+      h: '25',
+      w: '25'
+    }, vehicle, boost), new Orb({
+      x: '50',
+      y: '1550',
+      h: '25',
+      w: '25'
+    }, vehicle, boost), new Orb({
+      x: '1375',
+      y: '1325',
+      h: '25',
+      w: '25'
+    }, vehicle, boost)];
+  }
+
+  _createClass(Orbs, [{
+    key: "draw",
+    value: function draw(ctx) {
+      var _this = this;
+
+      this.orbs.forEach(function (orb) {
+        if (orb.active) {
+          orb.draw(ctx);
+        } else {
+          var index = _this.orbs.indexOf(orb);
+
+          _this.orbs.splice(index, 1);
+        }
+      });
+    }
+  }]);
+
+  return Orbs;
+}();
+
+module.exports = Orbs;
 
 /***/ }),
 
@@ -1002,7 +1219,7 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
 
   var _super = _createSuper(Vehicle);
 
-  function Vehicle(ball, track) {
+  function Vehicle(ball, track, boost) {
     var _this;
 
     _classCallCheck(this, Vehicle);
@@ -1010,17 +1227,18 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
     _this = _super.call(this, ball, track);
     _this.ball = ball;
     _this.track = track;
-    _this.health = 100;
+    _this.boost = boost;
     _this.currentAngle = 0;
     _this.currentX = 50;
     _this.currentY = 1900;
     _this.speed = 0;
     _this.currentSpeed = 0;
     _this.maxSpeed = 7;
-    _this.boostedSpeed = 8;
-    _this.ballDistance = 0;
-    _this.orbDetected = false;
+    _this.boostedSpeed = 10;
+    _this.boosted = false;
     _this.barrierDetected = false;
+    _this.sound = document.getElementById('rocket');
+    _this.sound.volume = 0.3;
     return _this;
   }
 
@@ -1038,8 +1256,11 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
             this.currentSpeed = Math.floor(this.speed);
           }
 
+          ;
           this.currentAngle -= 15 + this.currentSpeed;
         }
+
+        ;
       } else if (e.key === 'e') {
         if (this.currentAngle >= 360) this.currentAngle = 0;
 
@@ -1054,7 +1275,11 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
           ;
           this.currentAngle += 15 + this.currentSpeed;
         }
+
+        ;
       }
+
+      ;
     }
   }, {
     key: "moveVehicle",
@@ -1067,42 +1292,8 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
         this.speed -= 0.1;
       }
 
-      this.currentSpeed = Math.floor(this.speed);
-    }
-  }, {
-    key: "detectBall",
-    value: function detectBall() {
-      var x = this.currentX;
-      var y = this.currentY;
-      this.ballDistance = this.findDistance(x, y, this.ball.currentX, this.ball.currentY);
-
-      if (this.ballDistance <= 65) {
-        this.ball.vehicleHit(this.currentAngle, this.currentSpeed);
-      }
-    }
-  }, {
-    key: "detectBarrier",
-    value: function detectBarrier() {
-      var group;
-      if (this.currentY >= 1700 && this.currentY < 2000) group = this.track.group1;
-      if (this.currentY >= 1300 && this.currentY < 1700) group = this.track.group2;
-      if (this.currentY >= 1100 && this.currentY < 1300) group = this.track.group3;
-      if (this.currentY >= 700 && this.currentY < 1100) group = this.track.group4;
-      if (this.currentY >= 500 && this.currentY < 700) group = this.track.group5;
-
-      for (tile in group) {
-        var x = Number(group[tile].options.x);
-        var w = Number(group[tile].options.w);
-        var y = Number(group[tile].options.y);
-        var dist = this.findDistance(this.currentX, this.currentY, this.currentX, y);
-
-        if (dist <= 50) {
-          if ((group === this.track.group1 || group === this.track.group3) && this.currentX >= x && this.currentX <= w) this.barrierDetected = true;
-          if ((group === this.track.group2 || group === this.track.group4) && this.currentX >= x) this.barrierDetected = true; // if((group === this.track.group5) && ((this.currentX >= x) || (this.currentX >=x ))) this.barrierDetected = true;
-        }
-      }
-
       ;
+      this.currentSpeed = Math.floor(this.speed);
     }
   }, {
     key: "reduceSpeed",
@@ -1127,6 +1318,41 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
       this.currentSpeed = Math.floor(this.speed);
     }
   }, {
+    key: "detectBall",
+    value: function detectBall() {
+      var x = this.currentX;
+      var y = this.currentY;
+      var dist = this.findDistance(x, y, this.ball.currentX, this.ball.currentY);
+
+      if (dist <= 65) {
+        this.ball.vehicleHit(this.currentAngle, this.currentSpeed);
+      }
+
+      ;
+    }
+  }, {
+    key: "activateBoost",
+    value: function activateBoost(e) {
+      e.preventDefault();
+
+      if (this.boost.boostLevel > 0) {
+        this.sound.play();
+        this.boosted = true;
+        this.speed = this.boostedSpeed;
+        this.currentSpeed = this.boostedSpeed;
+      }
+
+      ;
+    }
+  }, {
+    key: "deactivateBoost",
+    value: function deactivateBoost() {
+      this.sound.pause();
+      this.boosted = false;
+      this.speed = 3;
+      this.currentSpeed = 3;
+    }
+  }, {
     key: "draw",
     value: function draw(ctx) {
       var _this3 = this;
@@ -1139,14 +1365,26 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
       }
 
       ;
-      this.barrierDetected = false; // window.scroll(this.currentX, (this.currentY))
 
+      if (this.boost.boostLevel > 0 && this.boosted) {
+        this.boost.decrementBoost();
+      } else if (this.boosted) {
+        this.deactivateBoost();
+      }
+
+      ; // window.scroll(this.currentX, (this.currentY))
+
+      this.barrierDetected = false;
       if (this.currentX > 1425) this.currentAngle = 180;
       if (this.currentX < 0) this.currentAngle = 360;
       if (this.currentY > 2000) this.currentAngle = 270;
       if (this.currentY < 0) this.currentAngle = 90;
       this.currentX += this.currentSpeed * Math.cos(Math.PI / 180 * this.currentAngle);
       this.currentY += this.currentSpeed * Math.sin(Math.PI / 180 * this.currentAngle);
+      this.flame = new Image();
+      this.flame.src = 'public/images/flame.png';
+      this.flame.width = 40;
+      this.flame.height = 40;
       this.vehicle = new Image();
       this.vehicle.src = "public/images/car_imgs/black_car.png";
       this.vehicle.width = 80;
@@ -1158,6 +1396,12 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
         ctx.translate(_this3.currentX, _this3.currentY);
         ctx.rotate(Math.PI / 180 * _this3.currentAngle);
         ctx.drawImage(_this3.vehicle, -(_this3.vehicle.width / 2), -(_this3.vehicle.height / 2), _this3.vehicle.width, _this3.vehicle.height);
+
+        if (_this3.boosted) {
+          ctx.drawImage(_this3.flame, -_this3.vehicle.width, -(_this3.vehicle.height / 2), _this3.flame.width, _this3.flame.height);
+        }
+
+        ;
         ctx.restore();
       };
     }
@@ -1168,54 +1412,6 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
 
 ;
 module.exports = Vehicle;
-
-/***/ }),
-
-/***/ "./public/javascripts/walls.js":
-/*!*************************************!*\
-  !*** ./public/javascripts/walls.js ***!
-  \*************************************/
-/***/ ((module) => {
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var Walls = /*#__PURE__*/function () {
-  function Walls() {
-    _classCallCheck(this, Walls);
-
-    this.x = 0;
-    this.y = 500;
-  }
-
-  _createClass(Walls, [{
-    key: "draw",
-    value: function draw(ctx) {
-      var _this = this;
-
-      // ctx.save();
-      this.stone = new Image();
-
-      this.stone.onload = function () {
-        for (var i = 0; i < 10; i++) {
-          ctx.drawImage(_this.stone, _this.x, 500, 100, 100);
-          _this.x += 75;
-        }
-
-        ;
-      }; // this.stone.src = 'public/images/stone.png'
-      // ctx.restore();
-
-    }
-  }]);
-
-  return Walls;
-}();
-
-module.exports = Walls;
 
 /***/ })
 
