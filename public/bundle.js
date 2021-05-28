@@ -686,15 +686,16 @@ var GameView = /*#__PURE__*/function () {
       var _this = this;
 
       document.addEventListener('keydown', function (e) {
-        if (e.key === 'e' || e.key === 'q') _this.vehicle.rotateVehicle(e);
+        if (e.key === 'e' || e.key === 'q' || e.key === "E" || e.key === "Q") _this.vehicle.rotateVehicle(e);
         if (e.key === 'w' || e.key === 's') _this.vehicle.moveVehicle(e);
         if (e.key === 'f') _this.vehicle.testFunc();
         if (e.code === 'Space') _this.vehicle.reduceSpeed(e);
         if (e.code === 'ShiftLeft') _this.vehicle.activateBoost(e);
+        console.log(e);
       });
       document.addEventListener('keyup', function (e) {
         if (e.key === 'w') _this.vehicle.reduceSpeed(e);
-        if (e.key === "Shift") _this.vehicle.deactivateBoost();
+        if (e.key === "Shift") _this.vehicle.reduceSpeed(e);
       });
     }
   }, {
@@ -856,7 +857,8 @@ var MovingObject = /*#__PURE__*/function () {
 
         if (dist <= 50) {
           if ((group === this.track.group1 || group === this.track.group3) && this.currentX >= x && this.currentX <= w) this.barrierDetected = true;
-          if ((group === this.track.group2 || group === this.track.group4) && this.currentX >= x) this.barrierDetected = true; // if((group === this.track.group5) && ((this.currentX >= x) || (this.currentX >=x ))) this.barrierDetected = true;
+          if ((group === this.track.group2 || group === this.track.group4) && this.currentX >= x) this.barrierDetected = true;
+          if (group === this.track.group5 && this.currentX >= x && this.currentX <= 900) this.barrierDetected = true;
         }
       }
 
@@ -1420,35 +1422,23 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
   _createClass(Vehicle, [{
     key: "rotateVehicle",
     value: function rotateVehicle(e) {
-      if (e.key === 'q') {
+      if (e.key === 'q' || e.key === "Q") {
         if (this.currentAngle <= -360) this.currentAngle = 0;
 
         if (this.currentSpeed === 0) {
           this.currentAngle -= 15;
         } else {
-          if (this.maxSpeed > this.currentSpeed) {
-            this.speed += 0.1;
-            this.currentSpeed = Math.floor(this.speed);
-          }
-
-          ;
-          this.currentAngle -= 15 + this.currentSpeed;
+          this.currentAngle -= 30;
         }
 
         ;
-      } else if (e.key === 'e') {
+      } else if (e.key === 'e' || e.key === "E") {
         if (this.currentAngle >= 360) this.currentAngle = 0;
 
         if (this.currentSpeed === 0) {
           this.currentAngle += 15;
         } else {
-          if (this.maxSpeed > this.currentSpeed) {
-            this.speed += 0.1;
-            this.currentSpeed = Math.floor(this.speed);
-          }
-
-          ;
-          this.currentAngle += 15 + this.currentSpeed;
+          this.currentAngle += 30;
         }
 
         ;
@@ -1475,8 +1465,6 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
     value: function reduceSpeed(e) {
       var _this2 = this;
 
-      e.preventDefault();
-
       if (e.code === 'Space' && this.speed >= 0.4) {
         this.speed -= 0.4;
       } else if (e.key === 'w' && this.speed > 0) {
@@ -1485,6 +1473,10 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
           _this2.speed /= 2;
           _this2.currentSpeed = Math.floor(_this2.speed);
         }, 500);
+      } else if (e.key === "Shift" && this.speed > 0) {
+        this.sound.pause();
+        this.boosted = false;
+        this.speed = 3;
       } else if (this.speed < 0) {
         this.speed += 0.5;
       }
@@ -1524,8 +1516,6 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
     value: function deactivateBoost() {
       this.sound.pause();
       this.boosted = false;
-      this.speed = 3;
-      this.currentSpeed = 3;
     }
   }, {
     key: "reset",

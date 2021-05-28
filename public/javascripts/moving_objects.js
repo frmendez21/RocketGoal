@@ -51,7 +51,7 @@ class MovingObject {
             if(dist <= 50) {
                 if((group === this.track.group1 || group === this.track.group3) && (this.currentX >= x && this.currentX <= w)) this.barrierDetected = true;
                 if((group === this.track.group2 || group === this.track.group4) && (this.currentX >= x)) this.barrierDetected = true;
-                // if((group === this.track.group5) && ((this.currentX >= x) || (this.currentX >=x ))) this.barrierDetected = true;
+                if((group === this.track.group5) && ((this.currentX >= x) && (this.currentX <=900 ))) this.barrierDetected = true;
             }
         };
     };

@@ -20,27 +20,19 @@ class Vehicle extends MovingObject{
     };
 
     rotateVehicle(e) {
-        if(e.key === 'q') {
+        if(e.key === 'q' || e.key === "Q") {
             if(this.currentAngle <= -360) this.currentAngle = 0;
             if(this.currentSpeed === 0) {
                 this.currentAngle -= 15;
             } else {
-                if(this.maxSpeed > this.currentSpeed) {
-                    this.speed += 0.1;
-                    this.currentSpeed = Math.floor(this.speed);
-                };
-                this.currentAngle -= (15 + this.currentSpeed);
+                this.currentAngle -= 30;
             };
-        } else if(e.key === 'e') {
+        } else if(e.key === 'e' || e.key === "E") {
              if(this.currentAngle >= 360) this.currentAngle = 0;
              if(this.currentSpeed === 0) {
                  this.currentAngle += 15 ;
              } else {
-                 if(this.maxSpeed > this.currentSpeed) {
-                     this.speed += 0.1;
-                     this.currentSpeed = Math.floor(this.speed);
-                 };
-                 this.currentAngle += (15 + this.currentSpeed);
+                 this.currentAngle += 30;
              };
         };
     };
@@ -56,15 +48,18 @@ class Vehicle extends MovingObject{
     };
 
     reduceSpeed(e) {
-        e.preventDefault(); 
         if(e.code === 'Space' && this.speed >= 0.4) {
             this.speed -= 0.4;
-        } else if(e.key === 'w' && this.speed > 0){
+        } else if((e.key === 'w') && this.speed > 0){
             this.speed /= 2;
             setTimeout(() => {
                 this.speed /=2;
                  this.currentSpeed = Math.floor(this.speed)
             }, 500)
+        } else if(e.key === "Shift" && this.speed > 0){
+            this.sound.pause()
+            this.boosted = false;
+            this.speed = 3;
         } else if(this.speed < 0) {
             this.speed += 0.5;
         };
@@ -95,8 +90,6 @@ class Vehicle extends MovingObject{
     deactivateBoost() {
         this.sound.pause()
         this.boosted = false;
-        this.speed = 3;
-        this.currentSpeed = 3;
     };
 
     reset() {

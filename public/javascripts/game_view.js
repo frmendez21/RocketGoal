@@ -10,16 +10,17 @@ class GameView {
 
     setEventListeners(){
        document.addEventListener('keydown', e => {
-            if(e.key === 'e' || e.key === 'q') this.vehicle.rotateVehicle(e)
+            if(e.key === 'e' || e.key === 'q' || e.key === "E" || e.key === "Q") this.vehicle.rotateVehicle(e)
             if(e.key === 'w' || e.key === 's') this.vehicle.moveVehicle(e)
             if(e.key === 'f') this.vehicle.testFunc()
             if(e.code === 'Space') this.vehicle.reduceSpeed(e);
             if(e.code === 'ShiftLeft') this.vehicle.activateBoost(e);
+            console.log(e)
         
         });
         document.addEventListener('keyup', e => {
             if(e.key === 'w') this.vehicle.reduceSpeed(e); 
-            if(e.key === "Shift") this.vehicle.deactivateBoost();
+            if(e.key === "Shift") this.vehicle.reduceSpeed(e);
         });
     };
 
