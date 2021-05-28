@@ -119,17 +119,33 @@ body {
      box-shadow: 2px 2px 2px black;
 }
 
-
-#timer {
+.top-right-btns {
     position: fixed;
     right: 40px;
     z-index: 6;
+}
+#timer {
+    display: block;
     color: greenyellow;
     font-family: 'Roboto', sans-serif;
     font-size: 40px;
     background-color: rgba(26, 26, 26, 0.7);
     padding: 20px;
     border-radius: 50px;
+}
+#mute, #play {
+    display: block;
+    color:  rgba(26, 26, 26, 0.8);
+    font-size: 30px;
+    cursor: pointer;
+}
+
+#mute:hover, #play:hover {
+    color: lightgray;
+}
+
+#play {
+    display: none;
 }
 
 .hidden {

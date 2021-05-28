@@ -13,7 +13,7 @@
 </head>
 <body>
     <div id="game-container">
-        <audio id="song" src="public/audio/fly.mp3" controls ></audio>
+        <audio id="song" src="public/audio/fly.mp3"></audio>
         <audio id="impact" src="public//audio//impact.wav" ></audio>
         <audio id="orb" src="public/audio/orb.wav"></audio>
         <audio id="rocket" src="public/audio/rocket.wav"></audio>
@@ -72,8 +72,11 @@
                     </ul>
                 </div>
             </div>
+
             <div class="buttons">
-                <i class="fab fa-github"></i>
+                <a href="https://github.com/frmendez21/RocketGoal" target="_blank">
+                    <i class="fab fa-github"></i>
+                </a>
                 <button class="start-btn">START</button>
                 <a href="https://www.linkedin.com/in/frank-mendez-96025a1b3/" target="_blank">
                     <i class="fab fa-linkedin"></i>
@@ -81,7 +84,9 @@
             </div>
         </div>
 
-        <div>
+        <div class="top-right-btns">
+            <i id="mute" class="fas fa-volume-mute"></i>
+            <i id="play" class="fas fa-volume-up" ></i>
             <p id="timer"></p>
         </div>
 

@@ -6,8 +6,7 @@ class GameView {
         this.ctx = ctx;
         this.stCtx = stCtx;
         this.animate = this.animate.bind(this);
-        // this.start = this.start.bind(this);
-    }
+    };
 
     setEventListeners(){
        document.addEventListener('keydown', e => {
@@ -27,15 +26,27 @@ class GameView {
    
     start() {
         document.addEventListener('click', e => {
+            const audio = document.getElementById('song');
+            const mute = document.getElementById('mute');
+            const play = document.getElementById('play');
+
+            audio.volume = 0.1;
             if(e.target.className === 'start-btn') {
-                const audio = document.getElementById('song');
-                audio.volume = 0.1;
-                // audio.play()
+                audio.play()
                 this.game.loadStatic(this.stCtx);
                 this.setEventListeners();
                 requestAnimationFrame(this.animate);
                 document.querySelector('.start-game-container').classList.add('hidden')
-            };
+            } else if(e.target.id === "mute"){
+                audio.pause();
+                mute.style.display = 'none';
+                play.style.display = 'block';
+            } else if(e.target.id === "play") {
+                audio.play();
+                play.style.display = 'none';
+                mute.style.display = 'block';
+            }
+            
         });
     };
 

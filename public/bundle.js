@@ -634,7 +634,7 @@ var GameView = /*#__PURE__*/function () {
     this.vehicle = this.game.vehicle;
     this.ctx = ctx;
     this.stCtx = stCtx;
-    this.animate = this.animate.bind(this); // this.start = this.start.bind(this);
+    this.animate = this.animate.bind(this);
   }
 
   _createClass(GameView, [{
@@ -660,9 +660,13 @@ var GameView = /*#__PURE__*/function () {
       var _this2 = this;
 
       document.addEventListener('click', function (e) {
+        var audio = document.getElementById('song');
+        var mute = document.getElementById('mute');
+        var play = document.getElementById('play');
+        audio.volume = 0.1;
+
         if (e.target.className === 'start-btn') {
-          var audio = document.getElementById('song');
-          audio.volume = 0.1; // audio.play()
+          audio.play();
 
           _this2.game.loadStatic(_this2.stCtx);
 
@@ -670,9 +674,15 @@ var GameView = /*#__PURE__*/function () {
 
           requestAnimationFrame(_this2.animate);
           document.querySelector('.start-game-container').classList.add('hidden');
+        } else if (e.target.id === "mute") {
+          audio.pause();
+          mute.style.display = 'none';
+          play.style.display = 'block';
+        } else if (e.target.id === "play") {
+          audio.play();
+          play.style.display = 'none';
+          mute.style.display = 'block';
         }
-
-        ;
       });
     }
   }, {
