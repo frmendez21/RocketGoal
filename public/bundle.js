@@ -1109,7 +1109,7 @@ var Timer = /*#__PURE__*/function () {
   function Timer() {
     _classCallCheck(this, Timer);
 
-    this.secs = 2;
+    this.secs = 120;
     this.gameOver = false;
     this.timer = document.getElementById('timer');
   }
