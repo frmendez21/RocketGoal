@@ -11,7 +11,7 @@ class Vehicle extends MovingObject{
         this.currentY = 1900;
         this.speed = 0;
         this.currentSpeed = 0;
-        this.maxSpeed = 7;
+        this.maxSpeed = 6;
         this.boostedSpeed = 10;
         this.boosted = false;
         this.barrierDetected = false;
@@ -56,7 +56,7 @@ class Vehicle extends MovingObject{
                 this.speed /=2;
                  this.currentSpeed = Math.floor(this.speed)
             }, 500)
-        } else if(e.key === "Shift" && this.speed > 0){
+        } else if((e.key === "Shift" && this.speed > 0) && this.boosted){
             this.sound.pause()
             this.boosted = false;
             this.speed = 3;
@@ -72,9 +72,11 @@ class Vehicle extends MovingObject{
        let y = this.currentY;
        let dist = this.findDistance(x, y, this.ball.currentX, this.ball.currentY)
 
-       if(dist <= 65) {
+       if(dist <= 65 && this.boosted) {
+          this.ball.vehicleHit(this.currentAngle, this.maxSpeed);
+        } else if(dist <= 65) {
           this.ball.vehicleHit(this.currentAngle, this.currentSpeed);
-        };
+        }
     };
 
     activateBoost(e) {
@@ -90,6 +92,8 @@ class Vehicle extends MovingObject{
     deactivateBoost() {
         this.sound.pause()
         this.boosted = false;
+        this.speed = 3;
+        this.currentSpeed = 3;
     };
 
     reset() {
@@ -116,7 +120,7 @@ class Vehicle extends MovingObject{
             this.deactivateBoost()
         };
 
-        window.scroll(this.currentX, (this.currentY - 300))
+        // window.scroll(this.currentX, (this.currentY - 300))
         
         this.barrierDetected = false;
         if(this.currentX > 1425) this.currentAngle = 180;

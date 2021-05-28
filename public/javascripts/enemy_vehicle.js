@@ -5,7 +5,7 @@ const Enemy = require('./enemy');
 class EnemyVehicle extends Vehicle {
     constructor(ball, player) {
         super(ball, player)
-        this.enemyGoalie = new EnemyGoalie([600, 100], ball);
+        this.enemyGoalie = new EnemyGoalie([600, 140], ball);
         this.enemy1 = new Enemy({x: 250, y:800, a:270, c:'green', h: 80,
         w: 90}, ball, player);
         this.enemy2 = new Enemy({x: 1200, y:500, a: 270, c:'yellow', h:60, w:90}, ball, player)

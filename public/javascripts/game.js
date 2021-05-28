@@ -66,18 +66,16 @@ class Game {
             } else if(this.timer.secs >= 60 && this.timer.secs < 90) {
                 this.award = 'silver';
                 awardMsg.innerText = "Whooo that was quick! Here's your Silver medal!"
-            } else if(this.timer.secs > 30 && this.timer.secs < 60) {
+            } else if(this.timer.secs >= 30 && this.timer.secs < 60) {
                 this.award = 'bronze';
                 awardMsg.innerText = "Not bad, for a first timer! Enjoy your Bronze medal!"
-            } else if (this.timer.secs > 0 && this.timer.secs < 30){
-                this.award = 'wood';
-                awardMsg.innerText = "You got this, give it another shot! Here's a a Wood medal for now!";
-            } else {
-                this.award = 'wood'
-                awardMsg.innerText = "Uh oh! Time's up, you got this, try again!";
+            }  else if(this.timer.secs > 0 && this.timer.secs < 30){
+                 awardMsg.innerText = "Oh no! No medal awarded with less than 30 seconds on the clock! Gold < 30, Silver < 60, Bronze < 90  "
+            }else {
+                awardMsg.innerText = "Uh oh! Time's up, you got this, try again!  Gold < 30, Silver < 60, Bronze < 90 ";
             };
 
-            timeMsg.innerText = `You finished in ${this.timer.secs} seconds!`
+            timeMsg.innerText = `You finished in ${120 - this.timer.secs} seconds!`
             timeMsg.style.color = "red";
 
             medal.src = `public/images/${this.award}.png`;

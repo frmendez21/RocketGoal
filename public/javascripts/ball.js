@@ -44,7 +44,7 @@ class Ball extends MovingObject{
     };
 
     detectGoal() {
-        if((this.currentX >= 620 && this.currentX <= 800) && this.currentY <= 20) {
+        if((this.currentX >= 620 && this.currentX <= 800) && this.currentY <= 60) {
             this.timer.gameOver = true;
         }
     };

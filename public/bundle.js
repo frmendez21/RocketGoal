@@ -94,7 +94,7 @@ var Ball = /*#__PURE__*/function (_MovingObject) {
   }, {
     key: "detectGoal",
     value: function detectGoal() {
-      if (this.currentX >= 620 && this.currentX <= 800 && this.currentY <= 20) {
+      if (this.currentX >= 620 && this.currentX <= 800 && this.currentY <= 60) {
         this.timer.gameOver = true;
       }
     }
@@ -451,7 +451,7 @@ var EnemyVehicle = /*#__PURE__*/function (_Vehicle) {
     _classCallCheck(this, EnemyVehicle);
 
     _this = _super.call(this, ball, player);
-    _this.enemyGoalie = new EnemyGoalie([600, 100], ball);
+    _this.enemyGoalie = new EnemyGoalie([600, 140], ball);
     _this.enemy1 = new Enemy({
       x: 250,
       y: 800,
@@ -614,19 +614,17 @@ var Game = /*#__PURE__*/function () {
         } else if (this.timer.secs >= 60 && this.timer.secs < 90) {
           this.award = 'silver';
           awardMsg.innerText = "Whooo that was quick! Here's your Silver medal!";
-        } else if (this.timer.secs > 30 && this.timer.secs < 60) {
+        } else if (this.timer.secs >= 30 && this.timer.secs < 60) {
           this.award = 'bronze';
           awardMsg.innerText = "Not bad, for a first timer! Enjoy your Bronze medal!";
         } else if (this.timer.secs > 0 && this.timer.secs < 30) {
-          this.award = 'wood';
-          awardMsg.innerText = "You got this, give it another shot! Here's a a Wood medal for now!";
+          awardMsg.innerText = "Oh no! No medal awarded with less than 30 seconds on the clock! Gold < 30, Silver < 60, Bronze < 90  ";
         } else {
-          this.award = 'wood';
-          awardMsg.innerText = "Uh oh! Time's up, you got this, try again!";
+          awardMsg.innerText = "Uh oh! Time's up, you got this, try again!  Gold < 30, Silver < 60, Bronze < 90 ";
         }
 
         ;
-        timeMsg.innerText = "You finished in ".concat(this.timer.secs, " seconds!");
+        timeMsg.innerText = "You finished in ".concat(120 - this.timer.secs, " seconds!");
         timeMsg.style.color = "red";
         medal.src = "public/images/".concat(this.award, ".png");
         this.award ? endState.appendChild(medal) : null;
@@ -691,7 +689,6 @@ var GameView = /*#__PURE__*/function () {
         if (e.key === 'f') _this.vehicle.testFunc();
         if (e.code === 'Space') _this.vehicle.reduceSpeed(e);
         if (e.code === 'ShiftLeft') _this.vehicle.activateBoost(e);
-        console.log(e);
       });
       document.addEventListener('keyup', function (e) {
         if (e.key === 'w') _this.vehicle.reduceSpeed(e);
@@ -1410,7 +1407,7 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
     _this.currentY = 1900;
     _this.speed = 0;
     _this.currentSpeed = 0;
-    _this.maxSpeed = 7;
+    _this.maxSpeed = 6;
     _this.boostedSpeed = 10;
     _this.boosted = false;
     _this.barrierDetected = false;
@@ -1473,7 +1470,7 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
           _this2.speed /= 2;
           _this2.currentSpeed = Math.floor(_this2.speed);
         }, 500);
-      } else if (e.key === "Shift" && this.speed > 0) {
+      } else if (e.key === "Shift" && this.speed > 0 && this.boosted) {
         this.sound.pause();
         this.boosted = false;
         this.speed = 3;
@@ -1491,11 +1488,11 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
       var y = this.currentY;
       var dist = this.findDistance(x, y, this.ball.currentX, this.ball.currentY);
 
-      if (dist <= 65) {
+      if (dist <= 65 && this.boosted) {
+        this.ball.vehicleHit(this.currentAngle, this.maxSpeed);
+      } else if (dist <= 65) {
         this.ball.vehicleHit(this.currentAngle, this.currentSpeed);
       }
-
-      ;
     }
   }, {
     key: "activateBoost",
@@ -1516,6 +1513,8 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
     value: function deactivateBoost() {
       this.sound.pause();
       this.boosted = false;
+      this.speed = 3;
+      this.currentSpeed = 3;
     }
   }, {
     key: "reset",
@@ -1550,8 +1549,8 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
         this.deactivateBoost();
       }
 
-      ;
-      window.scroll(this.currentX, this.currentY - 300);
+      ; // window.scroll(this.currentX, (this.currentY - 300))
+
       this.barrierDetected = false;
       if (this.currentX > 1425) this.currentAngle = 180;
       if (this.currentX < 0) this.currentAngle = 360;
