@@ -1,3 +1,4 @@
+
 class GameView {
     constructor(game, ctx, stCtx) {
         this.game = game;
@@ -5,8 +6,9 @@ class GameView {
         this.ctx = ctx;
         this.stCtx = stCtx;
         this.animate = this.animate.bind(this);
-        this.start = this.start.bind(this);
+        // this.start = this.start.bind(this);
     }
+
     setEventListeners(){
        document.addEventListener('keydown', e => {
             if(e.key === 'e' || e.key === 'q') this.vehicle.rotateVehicle(e)
@@ -21,22 +23,20 @@ class GameView {
             if(e.key === "Shift") this.vehicle.deactivateBoost();
         })
     };
-    restart() {
-        // const newGame = new GameView
-    }
 
+   
     start() {
-        // document.addEventListener('click', e => {
-            // if(e.target.className === 'start-btn') {
+        document.addEventListener('click', e => {
+            if(e.target.className === 'start-btn') {
                 const audio = document.getElementById('song');
                 audio.volume = 0.1;
                 // audio.play()
                 this.game.loadStatic(this.stCtx);
                 this.setEventListeners();
                 requestAnimationFrame(this.animate);
-                // document.querySelector('.start-game-container').classList.add('hidden')
-            // };
-        // });
+                document.querySelector('.start-game-container').classList.add('hidden')
+            };
+        });
     };
 
     animate() {

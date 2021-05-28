@@ -15,6 +15,9 @@ class BoostBar {
             this.boostLevel = 147;
         } 
     }
+    reset() {
+        this.boostLevel = 294;
+    }
 
     draw(ctx) {
         let y = (window.scrollY + 170);
@@ -23,7 +26,7 @@ class BoostBar {
         ctx.lineWidth = 5;
         ctx.strokeStyle = 'rgb(45, 45, 50)'
         ctx.fillRect(x + 3, y + 3, 35, this.boostLevel)
-        ctx.fillStyle = 'rgb(83, 210, 209)'
+        ctx.fillStyle = 'rgb(83, 210, 209, 0.8)'
     }
 };
 

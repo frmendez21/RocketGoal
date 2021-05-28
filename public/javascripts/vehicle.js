@@ -98,6 +98,18 @@ class Vehicle extends MovingObject{
         this.speed = 3;
         this.currentSpeed = 3;
     };
+
+    reset() {
+        this.currentAngle = 0;
+        this.currentX = 50;
+        this.currentY = 1900;
+        this.speed = 0;
+        this.currentSpeed = 0;
+        this.maxSpeed = 7;
+        this.boostedSpeed = 10;
+        this.boosted = false;
+        this.barrierDetected = false;
+    }
     
     draw(ctx) {
         this.detectBall();

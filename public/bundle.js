@@ -36,18 +36,20 @@ var Ball = /*#__PURE__*/function (_MovingObject) {
 
   var _super = _createSuper(Ball);
 
-  function Ball(track) {
+  function Ball(track, timer) {
     var _this;
 
     _classCallCheck(this, Ball);
 
     _this = _super.call(this);
     _this.track = track;
+    _this.timer = timer;
     _this.currentX = 500;
     _this.currentY = 1900;
     _this.velocity = 0;
     _this.currentAngle = 0;
     _this.barrierDetected = false;
+    _this.goalDetected = false;
     _this.impact = document.getElementById('impact');
     _this.impact.volume = 0.3;
     return _this;
@@ -90,11 +92,28 @@ var Ball = /*#__PURE__*/function (_MovingObject) {
       ;
     }
   }, {
+    key: "detectGoal",
+    value: function detectGoal() {
+      if (this.currentX >= 620 && this.currentX <= 800 && this.currentY <= 20) {
+        this.timer.gameOver = true;
+      }
+    }
+  }, {
+    key: "reset",
+    value: function reset() {
+      this.currentX = 500;
+      this.currentY = 1900;
+      this.velocity = 0;
+      this.currentAngle = 0;
+      this.barrierDetected = false;
+      this.goalDetected = false;
+    }
+  }, {
     key: "draw",
     value: function draw(ctx) {
       var _this3 = this;
 
-      // this.detectGoal();
+      this.detectGoal();
       this.detectBarrier();
 
       if (this.barrierDetected) {
@@ -105,6 +124,8 @@ var Ball = /*#__PURE__*/function (_MovingObject) {
           this.currentAngle -= 180;
           this.currentY -= this.velocity + 2;
         }
+
+        ;
       }
 
       ;
@@ -130,6 +151,7 @@ var Ball = /*#__PURE__*/function (_MovingObject) {
   return Ball;
 }(MovingObject);
 
+;
 module.exports = Ball;
 
 /***/ }),
@@ -170,6 +192,11 @@ var BoostBar = /*#__PURE__*/function () {
       }
     }
   }, {
+    key: "reset",
+    value: function reset() {
+      this.boostLevel = 294;
+    }
+  }, {
     key: "draw",
     value: function draw(ctx) {
       var y = window.scrollY + 170;
@@ -178,7 +205,7 @@ var BoostBar = /*#__PURE__*/function () {
       ctx.lineWidth = 5;
       ctx.strokeStyle = 'rgb(45, 45, 50)';
       ctx.fillRect(x + 3, y + 3, 35, this.boostLevel);
-      ctx.fillStyle = 'rgb(83, 210, 209)';
+      ctx.fillStyle = 'rgb(83, 210, 209, 0.8)';
     }
   }]);
 
@@ -511,12 +538,15 @@ var EnemyVehicle = __webpack_require__(/*! ./enemy_vehicle */ "./public/javascri
 
 var BoostBar = __webpack_require__(/*! ./boost_bar */ "./public/javascripts/boost_bar.js");
 
+var Timer = __webpack_require__(/*! ./timer */ "./public/javascripts/timer.js");
+
 var Game = /*#__PURE__*/function () {
   function Game() {
     _classCallCheck(this, Game);
 
     this.track = new Track();
-    this.ball = new Ball(this.track);
+    this.timer = new Timer();
+    this.ball = new Ball(this.track, this.timer);
     this.boostBar = new BoostBar();
     this.vehicle = new Vehicle(this.ball, this.track, this.boostBar);
     this.orbs = new Orbs(this.vehicle, this.boostBar);
@@ -540,8 +570,39 @@ var Game = /*#__PURE__*/function () {
       this.track.draw(sCtx);
       this.goal.draw(sCtx);
       setInterval(function () {
+        _this.timer.increment();
+
+        if (_this.timer.gameOver) _this.gameOver();
+      }, 1000);
+      setInterval(function () {
         return _this.orbs.draw(sCtx);
       }, 80);
+    }
+  }, {
+    key: "gameOver",
+    value: function gameOver() {
+      var _this2 = this;
+
+      if (this.timer.gameOver) {
+        var endGame = document.getElementById('end-game-container'); // const endGame = document.querySelector('.start-game-container')
+
+        endGame.classList.remove('hidden');
+        endGame.addEventListener('click', function (e) {
+          if (e.target.className === 'start-btn') {
+            endGame.classList.add('hidden');
+
+            _this2.vehicle.reset();
+
+            _this2.ball.reset();
+
+            _this2.timer.reset();
+
+            _this2.boostBar.reset();
+
+            _this2.orbs.reset();
+          }
+        });
+      }
     }
   }]);
 
@@ -573,8 +634,7 @@ var GameView = /*#__PURE__*/function () {
     this.vehicle = this.game.vehicle;
     this.ctx = ctx;
     this.stCtx = stCtx;
-    this.animate = this.animate.bind(this);
-    this.start = this.start.bind(this);
+    this.animate = this.animate.bind(this); // this.start = this.start.bind(this);
   }
 
   _createClass(GameView, [{
@@ -595,22 +655,25 @@ var GameView = /*#__PURE__*/function () {
       });
     }
   }, {
-    key: "restart",
-    value: function restart() {// const newGame = new GameView
-    }
-  }, {
     key: "start",
     value: function start() {
-      // document.addEventListener('click', e => {
-      // if(e.target.className === 'start-btn') {
-      var audio = document.getElementById('song');
-      audio.volume = 0.1; // audio.play()
+      var _this2 = this;
 
-      this.game.loadStatic(this.stCtx);
-      this.setEventListeners();
-      requestAnimationFrame(this.animate); // document.querySelector('.start-game-container').classList.add('hidden')
-      // };
-      // });
+      document.addEventListener('click', function (e) {
+        if (e.target.className === 'start-btn') {
+          var audio = document.getElementById('song');
+          audio.volume = 0.1; // audio.play()
+
+          _this2.game.loadStatic(_this2.stCtx);
+
+          _this2.setEventListeners();
+
+          requestAnimationFrame(_this2.animate);
+          document.querySelector('.start-game-container').classList.add('hidden');
+        }
+
+        ;
+      });
     }
   }, {
     key: "animate",
@@ -798,9 +861,9 @@ var Orb = /*#__PURE__*/function (_MovingObject) {
     _this.y = options.y;
     _this.h = options.h;
     _this.w = options.w;
-    _this.c = 0;
     _this.vehicle = vehicle;
     _this.boost = boost;
+    _this.c = 0;
     _this.active = true;
     _this.sound = document.getElementById('orb');
     _this.sound.volume = 0.5;
@@ -821,6 +884,14 @@ var Orb = /*#__PURE__*/function (_MovingObject) {
       ;
     }
   }, {
+    key: "reset",
+    value: function reset() {
+      var ctx = document.getElementById('static-canvas').getContext('2d');
+      ctx.clearRect(0, 0, 1425, 2000);
+      this.c = 0;
+      this.active = true;
+    }
+  }, {
     key: "draw",
     value: function draw(ctx) {
       var _this2 = this;
@@ -829,18 +900,18 @@ var Orb = /*#__PURE__*/function (_MovingObject) {
       this.c >= 4 ? this.c = 0 : this.c++;
       ctx.save();
       var orb = new Image();
+      var pad = new Image();
+      orb.src = "public/images/orbs/".concat(this.c, ".png");
+      pad.src = "public/images/orbs/pad.png";
 
       if (this.active) {
-        orb.src = "public/images/orbs/".concat(this.c, ".png");
-
         orb.onload = function () {
+          ctx.clearRect(_this2.x - 35, _this2.y - 35, 100, 100);
           ctx.drawImage(orb, _this2.x, _this2.y, _this2.w, _this2.h);
         };
       } else {
-        orb.src = "public/images/orbs/pad.png";
-
-        orb.onload = function () {
-          ctx.drawImage(orb, _this2.x - 35, _this2.y - 35, 100, 100);
+        pad.onload = function () {
+          ctx.drawImage(pad, _this2.x - 35, _this2.y - 35, 100, 100);
         };
       }
 
@@ -896,25 +967,24 @@ var Orbs = /*#__PURE__*/function () {
       w: '25'
     }, vehicle, boost), new Orb({
       x: '1375',
-      y: '1325',
+      y: '1250',
       h: '25',
       w: '25'
     }, vehicle, boost)];
   }
 
   _createClass(Orbs, [{
+    key: "reset",
+    value: function reset() {
+      this.orbs.forEach(function (orb) {
+        return orb.reset();
+      });
+    }
+  }, {
     key: "draw",
     value: function draw(ctx) {
-      var _this = this;
-
       this.orbs.forEach(function (orb) {
-        if (orb.active) {
-          orb.draw(ctx);
-        } else {
-          var index = _this.orbs.indexOf(orb);
-
-          _this.orbs.splice(index, 1);
-        }
+        if (orb.active) orb.draw(ctx);
       });
     }
   }]);
@@ -965,6 +1035,56 @@ var Tile = /*#__PURE__*/function () {
 }();
 
 module.exports = Tile;
+
+/***/ }),
+
+/***/ "./public/javascripts/timer.js":
+/*!*************************************!*\
+  !*** ./public/javascripts/timer.js ***!
+  \*************************************/
+/***/ ((module) => {
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Timer = /*#__PURE__*/function () {
+  function Timer() {
+    _classCallCheck(this, Timer);
+
+    this.secs = 120;
+    this.gameOver = false;
+    this.timer = document.getElementById('timer');
+  }
+
+  _createClass(Timer, [{
+    key: "increment",
+    value: function increment() {
+      if (!this.gameOver) {
+        if (this.secs > 0) this.secs--;
+        if (this.secs <= 60) this.timer.style.color = 'yellow';
+        if (this.secs <= 10) this.timer.style.color = 'red';
+        if (this.secs === 0) this.gameOver = true;
+        this.timer.innerHTML = this.secs;
+      }
+
+      ;
+    }
+  }, {
+    key: "reset",
+    value: function reset() {
+      this.secs = 120;
+      this.gameOver = false;
+    }
+  }]);
+
+  return Timer;
+}();
+
+;
+module.exports = Timer;
 
 /***/ }),
 
@@ -1351,6 +1471,19 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
       this.boosted = false;
       this.speed = 3;
       this.currentSpeed = 3;
+    }
+  }, {
+    key: "reset",
+    value: function reset() {
+      this.currentAngle = 0;
+      this.currentX = 50;
+      this.currentY = 1900;
+      this.speed = 0;
+      this.currentSpeed = 0;
+      this.maxSpeed = 7;
+      this.boostedSpeed = 10;
+      this.boosted = false;
+      this.barrierDetected = false;
     }
   }, {
     key: "draw",

@@ -6,9 +6,9 @@ class Orb extends MovingObject{
         this.y = options.y;
         this.h = options.h;
         this.w = options.w;
-        this.c = 0;
         this.vehicle = vehicle;
         this.boost = boost;
+        this.c = 0;
         this.active = true;
         this.sound = document.getElementById('orb');
         this.sound.volume = 0.5;
@@ -22,21 +22,31 @@ class Orb extends MovingObject{
             this.active = false;
         };
     };
+    
+    reset() {
+        let ctx = document.getElementById('static-canvas').getContext('2d');
+        ctx.clearRect(0, 0, 1425, 2000)
+        this.c = 0;
+        this.active = true;
+    };
 
     draw(ctx) {
         this.detectVehicle();
         this.c >= 4 ? this.c = 0 : this.c ++;
         ctx.save();
         let orb = new Image();
+        let pad = new Image();
+        orb.src = `public/images/orbs/${this.c}.png`;
+        pad.src = `public/images/orbs/pad.png`;
+
         if(this.active){
-            orb.src = `public/images/orbs/${this.c}.png`;
             orb.onload = () => {
+                ctx.clearRect(this.x - 35, this.y - 35, 100, 100)
                 ctx.drawImage(orb, this.x, this.y, this.w, this.h)
             };
         } else {
-            orb.src = `public/images/orbs/pad.png`
-            orb.onload = () => {
-                ctx.drawImage(orb, this.x - 35, this.y - 35, 100, 100)
+            pad.onload = () => {
+                ctx.drawImage(pad, this.x - 35, this.y - 35, 100, 100)
             };
         }
         ctx.restore();

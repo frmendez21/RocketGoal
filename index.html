@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="./public/stylesheets/game.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/6236dc5361.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -17,32 +18,76 @@
         <audio id="orb" src="public/audio/orb.wav"></audio>
         <audio id="rocket" src="public/audio/rocket.wav"></audio>
         <div class="start-game-container">
+            <img class="logo" src="public/images/logo2.png" alt="" height="120">
+            <div class="instructions">
+                <div class="controls-container">
+                    <h5 class="controls-head">Controls:</h5>
+                    <ul class="controls-list">
+                        <li class="list-item">
+                            <i class="fas fa-arrow-up"></i>
+                            <p>W - move forward</p>
+                        </li>
+                        <li class="list-item">
+                            <i class="fas fa-arrow-down"></i>
+                            <p>S - move backward</p>
+                        </li>
+                        <li class="list-item">
+                            <i class="fas fa-arrow-right"></i>
+                            <p>E - turn right</p>
+                        </li>
+                        <li class="list-item">
+                            <i class="fas fa-arrow-left"></i>
+                            <p>Q - turn left</p>
+                        </li>
+                        <li class="list-item">
+                            <i class="fas fa-hand-paper" id="stop"></i>
+                            <p>Space - brake</p>
+                        </li>
+                        <li class="list-item">
+                            <i class="fas fa-bolt"></i>
+                            <p>Shift - activate boost</p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="obj-container">
+                    <h5 class="obj-head">Objectives:</h5>
+                    <ul class="obj-list">
+                        <li class="list-item">
+                            <img src="public//images//car_imgs//red_car.png" alt="" width="35" height="30">
+                            <p>Avoid enemies, they will bounce the ball away from you</p>
+                        </li>
+                        <li class="list-item">
+                            <i class="fas fa-clock"></i>
+                            <p>Finish within time limit of 120 seconds</p>
+                            
+                        </li>
+                        <li class="list-item">
+                            <img src="public/images//orbs/0.png" alt="" width="25" height="25">
+                            <p>Collect boosts for bonus points and speed increase</p>
+                        </li>
+                        <li class="list-item">
+                            <i class="fas fa-futbol"></i>
+                            <p>Score a goal!</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="buttons">
+                <i class="fab fa-github"></i>
+                <button class="start-btn">START</button>
+                <a href="https://www.linkedin.com/in/frank-mendez-96025a1b3/" target="_blank">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+            </div>
+        </div>
 
-            <h3 class="start-game-head">WELCOME TO ROCKET GOAL</h3>
-            <h5 class="controls-head">Controls:</h5>
-            <ul class="controls-container">
-                <li class="controls-list-item">
-                    <i class="fas fa-arrow-up"></i>
-                    <p id="control">W - move forward</p>
-                </li>
-                <li class="controls-list-item">
-                    <i class="fas fa-arrow-right"></i>
-                    <p id="control">E - turn right</p>
-                </li>
-                <li class="controls-list-item">
-                    <i class="fas fa-arrow-left"></i>
-                    <p id="control">Q - turn left</p>
-                </li>
-                <li class="controls-list-item">
-                    <i class="fas fa-hand-paper" id="stop"></i>
-                    <p id="control">Space - brake</p>
-                </li>
-            </ul>
-            <button class="start-btn">START</button>
+        <div>
+            <p id="timer"></p>
         </div>
 
         <div id="end-game-container" class="hidden">
-            <h3>YOU WIN</h3>
+            <h3>Game Over!</h3>
+            <button class="start-btn">RESTART</button>
         </div>
         <canvas id="game-canvas" height="2000" width="1425"></canvas>
         <canvas id="bg-canvas" height="2000" width="1425"></canvas>

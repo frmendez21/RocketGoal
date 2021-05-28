@@ -6,12 +6,138 @@ body {
     width: 1425;
 }
 
-.start-btn {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    z-index: 3;
+.logo {
+    padding-top: 10px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: -40px;
 }
+
+#song {
+    z-index: 4;
+    position: absolute;
+    border-radius: 2px;
+    color: green;
+}
+
+.start-game-container, #end-game-container{
+    position: fixed;
+    z-index: 5;
+    left: 25%;
+    top: 15%;
+    bottom: 25%;
+    right: 25%;
+    height: 600px;
+    background-color: rgba(26, 26, 26, 0.8);
+    border-radius: 10px;
+    box-shadow: 2px 2px 2px black;
+}
+
+.instructions {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.controls-container {
+    width: 40%;
+    margin-left: 30px;
+}
+
+.obj-container {
+    width: 40%;
+    margin-right: 30px;
+
+}
+.obj-head, .controls-head {
+    color: white;
+    font-size: 20px;
+    text-align: center;
+}
+
+
+.controls-list, .obj-list {
+    padding-top: 10px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 2px 2px 2px white;
+    height: 275px;
+}
+
+
+.list-item {
+    list-style: none;
+    padding-bottom: 15px;
+}
+
+.list-item > p {
+    display: inline;
+    padding-left: 10px;
+}
+
+.fas {
+    color: green;
+    font-size: 25px;
+}
+#stop {
+    color: red;
+}
+.buttons {
+    margin-top: 20px;
+    padding: 0 50px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.fab{
+    color: white;
+    font-size: 60px;
+    cursor: pointer;
+}
+
+.fab:hover {
+    color: gray;
+}
+
+.start-btn {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border: none;
+    background-color: rgb(69, 236, 18);
+    font-weight: bolder;
+    padding: 20px;
+    font-size: 20px;
+    box-shadow: 2px 2px 2px green;
+    cursor: pointer;
+}
+
+.start-btn:hover {
+    background-color: rgb(188, 236, 188);
+    color: white;
+     box-shadow: 2px 2px 2px black;
+}
+
+
+#timer {
+    position: fixed;
+    right: 40px;
+    z-index: 6;
+    color: greenyellow;
+    font-family: 'Roboto', sans-serif;
+    font-size: 40px;
+    background-color: rgba(26, 26, 26, 0.7);
+    padding: 20px;
+    border-radius: 50px;
+}
+
+.hidden {
+    display: none;
+}
+
+
+
 #game-canvas {
     position: absolute;
     margin-left: auto;
@@ -22,8 +148,6 @@ body {
     z-index: 2;
     background-color: transparent;
 }
-
-
 
 #bg-canvas {
     position: absolute;
@@ -46,90 +170,4 @@ body {
     border: 1px solid gray;
     z-index: 1;
     background-color: transparent;
-}
-
-#song {
-    z-index: 4;
-    position: absolute;
-    border-radius: 2px;
-    color: green;
-   
-}
-
-.hidden {
-    display: none;
-}
-
-.start-game-container {
-    position: absolute;
-    z-index: -2;
-    left: 25%;
-    top: 25%;
-    bottom: 25%;
-    right: 25%;
-    background-color: rgba(26, 26, 26, 0.8);
-    border-radius: 10px;
-    box-shadow: 2px 2px 2px black;
-}
-.start-game-head{
-    text-align: center;
-    color: white;
-    font-size: 22px;
-}
-.controls-head {
-    text-align: center;
-    color: white;
-    font-size: 20px;
-}
-.controls-container {
-    position: relative;
-    left: 32%;
-    bottom: 10px;
-    width: 30%;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 2px 2px 2px white;
-}
-.controls-list-item {
-    list-style: none;
-    padding-bottom: 15px;
-}
-.fas {
-    color: green;
-    padding-right: 15px;
-}
-#stop {
-    color: red;
-}
-#control {
-    display: inline;
-}
-
-.start-btn {
-    display: block;
-    margin-left: -30px;
-    margin-top: 16%;
-    border: none;
-    background-color: rgb(69, 236, 18);
-    font-weight: bolder;
-    padding: 10px;
-    box-shadow: 2px 2px 2px green;
-    cursor: pointer;
-}
-
-
-#end-game-container {
-   position: absolute;
-    z-index: 5;
-    left: 25%;
-    top: 25%;
-    bottom: 25%;
-    right: 25%;
-    background-color: rgba(26, 26, 26, 0.8);
-    border-radius: 10px;
-    box-shadow: 2px 2px 2px black;
-}
-
-.hidden {
-    display: none;
 }
