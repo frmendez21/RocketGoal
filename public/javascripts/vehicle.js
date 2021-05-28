@@ -123,7 +123,7 @@ class Vehicle extends MovingObject{
             this.deactivateBoost()
         };
 
-        // window.scroll(this.currentX, (this.currentY))
+        window.scroll(this.currentX, (this.currentY - 300))
         
         this.barrierDetected = false;
         if(this.currentX > 1425) this.currentAngle = 180;

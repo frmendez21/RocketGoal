@@ -1,7 +1,7 @@
 
 class Timer {
     constructor() {
-        this.secs = 120;
+        this.secs = 2;
         this.gameOver = false;
         this.timer = document.getElementById('timer');
     };

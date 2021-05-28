@@ -181,6 +181,8 @@ var BoostBar = /*#__PURE__*/function () {
       if (this.boostLevel > 0) {
         this.boostLevel -= 1;
       }
+
+      ;
     }
   }, {
     key: "incrementBoost",
@@ -552,6 +554,9 @@ var Game = /*#__PURE__*/function () {
     this.orbs = new Orbs(this.vehicle, this.boostBar);
     this.enemyVehicle = new EnemyVehicle(this.ball, this.vehicle);
     this.goal = new Goal();
+    this.score = 120;
+    this.award = null;
+    this.endGame = false;
   }
 
   _createClass(Game, [{
@@ -569,40 +574,78 @@ var Game = /*#__PURE__*/function () {
 
       this.track.draw(sCtx);
       this.goal.draw(sCtx);
-      setInterval(function () {
+      var tInt = setInterval(function () {
+        _this.restart = false;
+
         _this.timer.increment();
 
-        if (_this.timer.gameOver) _this.gameOver();
+        if (_this.timer.gameOver) {
+          _this.timer.secs > 0 ? _this.score = _this.timer.secs : null;
+          _this.endGame = true;
+          clearInterval(tInt);
+          clearInterval(oInt);
+
+          _this.gameOver();
+        }
+
+        ;
       }, 1000);
-      setInterval(function () {
+      var oInt = setInterval(function () {
         return _this.orbs.draw(sCtx);
       }, 80);
     }
   }, {
     key: "gameOver",
     value: function gameOver() {
-      var _this2 = this;
-
-      if (this.timer.gameOver) {
-        var endGame = document.getElementById('end-game-container'); // const endGame = document.querySelector('.start-game-container')
-
+      if (this.endGame) {
+        var endGame = document.getElementById('end-game-container');
+        var awardMsg = document.getElementById('award-message');
+        var timeMsg = document.getElementById('time-message');
+        var endState = document.querySelector('.end-game-stats');
+        var oldMedal = document.getElementById('medal');
+        oldMedal ? oldMedal.remove() : null;
+        var medal = document.createElement('img');
+        medal.id = "medal";
         endGame.classList.remove('hidden');
+
+        if (this.timer.secs >= 90 && this.timer.secs < 120) {
+          this.award = 'gold';
+          awardMsg.innerText = 'You crushed it! You deserve this Gold medal!';
+        } else if (this.timer.secs >= 60 && this.timer.secs < 90) {
+          this.award = 'silver';
+          awardMsg.innerText = "Whooo that was quick! Here's your Silver medal!";
+        } else if (this.timer.secs > 30 && this.timer.secs < 60) {
+          this.award = 'bronze';
+          awardMsg.innerText = "Not bad, for a first timer! Enjoy your Bronze medal!";
+        } else if (this.timer.secs > 0 && this.timer.secs < 30) {
+          this.award = 'wood';
+          awardMsg.innerText = "You got this, give it another shot! Here's a a Wood medal for now!";
+        } else {
+          this.award = 'wood';
+          awardMsg.innerText = "Uh oh! Time's up, you got this, try again!";
+        }
+
+        ;
+        timeMsg.innerText = "You finished in ".concat(this.timer.secs, " seconds!");
+        timeMsg.style.color = "red";
+        medal.src = "public/images/".concat(this.award, ".png");
+        this.award ? endState.appendChild(medal) : null;
+        this.vehicle.reset();
+        this.ball.reset();
+        this.timer.reset();
+        this.boostBar.reset();
+        this.orbs.reset();
         endGame.addEventListener('click', function (e) {
           if (e.target.className === 'start-btn') {
             endGame.classList.add('hidden');
-
-            _this2.vehicle.reset();
-
-            _this2.ball.reset();
-
-            _this2.timer.reset();
-
-            _this2.boostBar.reset();
-
-            _this2.orbs.reset();
+            window.location.reload();
           }
+
+          ;
         });
       }
+
+      ;
     }
   }]);
 
@@ -666,6 +709,7 @@ var GameView = /*#__PURE__*/function () {
         audio.volume = 0.1;
 
         if (e.target.className === 'start-btn') {
+          document.querySelector('.start-game-container').classList.add('hidden');
           audio.play();
 
           _this2.game.loadStatic(_this2.stCtx);
@@ -673,7 +717,6 @@ var GameView = /*#__PURE__*/function () {
           _this2.setEventListeners();
 
           requestAnimationFrame(_this2.animate);
-          document.querySelector('.start-game-container').classList.add('hidden');
         } else if (e.target.id === "mute") {
           audio.pause();
           mute.style.display = 'none';
@@ -683,6 +726,8 @@ var GameView = /*#__PURE__*/function () {
           play.style.display = 'none';
           mute.style.display = 'block';
         }
+
+        ;
       });
     }
   }, {
@@ -1064,7 +1109,7 @@ var Timer = /*#__PURE__*/function () {
   function Timer() {
     _classCallCheck(this, Timer);
 
-    this.secs = 120;
+    this.secs = 2;
     this.gameOver = false;
     this.timer = document.getElementById('timer');
   }
@@ -1515,8 +1560,8 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
         this.deactivateBoost();
       }
 
-      ; // window.scroll(this.currentX, (this.currentY))
-
+      ;
+      window.scroll(this.currentX, this.currentY - 300);
       this.barrierDetected = false;
       if (this.currentX > 1425) this.currentAngle = 180;
       if (this.currentX < 0) this.currentAngle = 360;

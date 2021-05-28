@@ -1,7 +1,7 @@
 body {
     background-color: black;
     font-family: 'Noto Sans KR', sans-serif;
-    /* overflow: hidden; */
+    overflow: hidden;
     height: 2000;
     width: 1425;
 }
@@ -48,14 +48,26 @@ body {
 .obj-container {
     width: 40%;
     margin-right: 30px;
-
 }
-.obj-head, .controls-head {
+.end-game-stats {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 45px;
+    background-color: white;
+    width: 60%;
+    box-shadow: 2px 2px 2px white;
+    height: 300px;
+    border-radius: 10px;
+}
+
+.obj-head, .controls-head, .end-head {
     color: white;
     font-size: 20px;
     text-align: center;
 }
-
+.end-head {
+    color: black;
+}
 
 .controls-list, .obj-list {
     padding-top: 10px;
@@ -146,6 +158,17 @@ body {
 
 #play {
     display: none;
+}
+
+#medal {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#award-message, #time-message {
+    text-align: center;
+    font-size: 18px;
 }
 
 .hidden {

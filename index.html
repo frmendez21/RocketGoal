@@ -63,7 +63,7 @@
                         </li>
                         <li class="list-item">
                             <img src="public/images//orbs/0.png" alt="" width="25" height="25">
-                            <p>Collect boosts for bonus points and speed increase</p>
+                            <p>Collect boosts for a speed increase</p>
                         </li>
                         <li class="list-item">
                             <i class="fas fa-futbol"></i>
@@ -91,8 +91,21 @@
         </div>
 
         <div id="end-game-container" class="hidden">
-            <h3>Game Over!</h3>
-            <button class="start-btn">RESTART</button>
+            <img class="logo" src="public/images/logo2.png" alt="" height="120">
+            <div class="end-game-stats">
+                <h4 class="end-head">GAME OVER</h4>
+                <p id="award-message"></p>
+                <p id="time-message"></p>
+            </div>
+            <div class="buttons">
+                <a href="https://github.com/frmendez21/RocketGoal" target="_blank">
+                    <i class="fab fa-github"></i>
+                </a>
+                <button class="start-btn">RESTART</button>
+                <a href="https://www.linkedin.com/in/frank-mendez-96025a1b3/" target="_blank">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+            </div>
         </div>
         <canvas id="game-canvas" height="2000" width="1425"></canvas>
         <canvas id="bg-canvas" height="2000" width="1425"></canvas>
