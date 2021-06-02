@@ -1549,8 +1549,8 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
         this.deactivateBoost();
       }
 
-      ; // window.scroll(this.currentX, (this.currentY - 300))
-
+      ;
+      window.scroll(this.currentX, this.currentY - 300);
       this.barrierDetected = false;
       if (this.currentX > 1425) this.currentAngle = 180;
       if (this.currentX < 0) this.currentAngle = 360;
