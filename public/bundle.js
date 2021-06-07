@@ -688,14 +688,14 @@ var GameView = /*#__PURE__*/function () {
       var _this = this;
 
       document.addEventListener('keydown', function (e) {
-        if (e.key === 'd' || e.key === 'D' || e.key === "a" || e.key === "A") _this.vehicle.rotateVehicle(e);
-        if (e.key === 'w' || e.key === 's') _this.vehicle.moveVehicle(e);
+        if (e.key === "ArrowLeft" || e.key === 'ArrowRight') _this.vehicle.rotateVehicle(e);
+        if (e.key === 'ArrowUp' || e.key === 'ArrowDown') _this.vehicle.moveVehicle(e);
         if (e.key === 'f') _this.vehicle.testFunc();
         if (e.code === 'Space') _this.vehicle.reduceSpeed(e);
         if (e.code === 'ShiftLeft') _this.vehicle.activateBoost(e);
       });
       document.addEventListener('keyup', function (e) {
-        if (e.key === 'w') _this.vehicle.reduceSpeed(e);
+        if (e.key === 'ArrowUp') _this.vehicle.reduceSpeed(e);
         if (e.key === "Shift") _this.vehicle.reduceSpeed(e);
       });
     }
@@ -1426,7 +1426,7 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
   _createClass(Vehicle, [{
     key: "rotateVehicle",
     value: function rotateVehicle(e) {
-      if (e.key === 'a' || e.key === "A") {
+      if (e.key === 'ArrowLeft') {
         if (this.currentAngle <= -360) this.currentAngle = 0;
 
         if (this.currentSpeed === 0) {
@@ -1436,7 +1436,7 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
         }
 
         ;
-      } else if (e.key === 'd' || e.key === "D") {
+      } else if (e.key === 'ArrowRight') {
         if (this.currentAngle >= 360) this.currentAngle = 0;
 
         if (this.currentSpeed === 0) {
@@ -1455,9 +1455,9 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
     value: function moveVehicle(e) {
       e.preventDefault();
 
-      if (e.key === 'w' && this.maxSpeed > this.speed && e.type === 'keydown') {
+      if (e.key === 'ArrowUp' && this.maxSpeed > this.speed && e.type === 'keydown') {
         this.speed += 0.6;
-      } else if (e.key === 's' && e.type === 'keydown') {
+      } else if (e.key === 'ArrowDown' && e.type === 'keydown') {
         this.speed -= 0.1;
       }
 
@@ -1471,7 +1471,7 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
 
       if (e.code === 'Space' && this.speed >= 0.4) {
         this.speed -= 0.4;
-      } else if (e.key === 'w' && this.speed > 0) {
+      } else if (e.key === 'ArrowUp' && this.speed > 0) {
         this.speed /= 2;
         setTimeout(function () {
           _this2.speed /= 2;

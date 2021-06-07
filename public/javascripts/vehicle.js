@@ -21,14 +21,14 @@ class Vehicle extends MovingObject{
     };
 
     rotateVehicle(e) {
-        if(e.key === 'a' || e.key === "A") {
+        if(e.key === 'ArrowLeft') {
             if(this.currentAngle <= -360) this.currentAngle = 0;
             if(this.currentSpeed === 0) {
                 this.currentAngle -= 15;
             } else {
                 this.currentAngle -= 30;
             };
-        } else if(e.key === 'd' || e.key === "D") {
+        } else if(e.key === 'ArrowRight') {
              if(this.currentAngle >= 360) this.currentAngle = 0;
              if(this.currentSpeed === 0) {
                  this.currentAngle += 15 ;
@@ -40,9 +40,9 @@ class Vehicle extends MovingObject{
 
     moveVehicle(e) {
         e.preventDefault();
-        if(e.key === 'w' && (this.maxSpeed > this.speed && e.type === 'keydown')) {
+        if(e.key === 'ArrowUp' && (this.maxSpeed > this.speed && e.type === 'keydown')) {
             this.speed += 0.6;
-        } else if(( e.key === 's' && e.type === 'keydown')) {
+        } else if(( e.key === 'ArrowDown' && e.type === 'keydown')) {
             this.speed -= 0.1;
         };
         this.currentSpeed = Math.floor(this.speed);
@@ -51,7 +51,7 @@ class Vehicle extends MovingObject{
     reduceSpeed(e) {
         if(e.code === 'Space' && this.speed >= 0.4) {
             this.speed -= 0.4;
-        } else if((e.key === 'w') && this.speed > 0){
+        } else if((e.key === 'ArrowUp') && this.speed > 0){
             this.speed /= 2;
             setTimeout(() => {
                 this.speed /=2;

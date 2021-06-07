@@ -10,14 +10,14 @@ class GameView {
 
     setEventListeners(){
        document.addEventListener('keydown', e => {
-            if(e.key === 'd' || e.key === 'D' || e.key === "a" || e.key === "A") this.vehicle.rotateVehicle(e)
-            if(e.key === 'w' || e.key === 's') this.vehicle.moveVehicle(e)
+            if(e.key === "ArrowLeft" || e.key === 'ArrowRight') this.vehicle.rotateVehicle(e)
+            if(e.key === 'ArrowUp' || e.key === 'ArrowDown') this.vehicle.moveVehicle(e)
             if(e.key === 'f') this.vehicle.testFunc()
             if(e.code === 'Space') this.vehicle.reduceSpeed(e);
             if(e.code === 'ShiftLeft') this.vehicle.activateBoost(e);
         });
         document.addEventListener('keyup', e => {
-            if(e.key === 'w') this.vehicle.reduceSpeed(e); 
+            if(e.key === 'ArrowUp') this.vehicle.reduceSpeed(e); 
             if(e.key === "Shift") this.vehicle.reduceSpeed(e);
         });
     };
@@ -29,8 +29,8 @@ class GameView {
             const play = document.getElementById('play');
             audio.volume = 0.1;
             if(e.target.className === 'start-btn') {
-                document.querySelector('.start-game-container').classList.add('hidden')
-                audio.play()
+                document.querySelector('.start-game-container').classList.add('hidden');
+                audio.play();
                 this.game.loadStatic(this.stCtx);
                 this.setEventListeners();
                 requestAnimationFrame(this.animate);
