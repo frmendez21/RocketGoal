@@ -684,7 +684,7 @@ var GameView = /*#__PURE__*/function () {
       var _this = this;
 
       document.addEventListener('keydown', function (e) {
-        if (e.key === 'e' || e.key === 'q' || e.key === "E" || e.key === "Q") _this.vehicle.rotateVehicle(e);
+        if (e.key === 'd' || e.key === 'D' || e.key === "a" || e.key === "A") _this.vehicle.rotateVehicle(e);
         if (e.key === 'w' || e.key === 's') _this.vehicle.moveVehicle(e);
         if (e.key === 'f') _this.vehicle.testFunc();
         if (e.code === 'Space') _this.vehicle.reduceSpeed(e);
@@ -1419,7 +1419,7 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
   _createClass(Vehicle, [{
     key: "rotateVehicle",
     value: function rotateVehicle(e) {
-      if (e.key === 'q' || e.key === "Q") {
+      if (e.key === 'a' || e.key === "A") {
         if (this.currentAngle <= -360) this.currentAngle = 0;
 
         if (this.currentSpeed === 0) {
@@ -1429,7 +1429,7 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
         }
 
         ;
-      } else if (e.key === 'e' || e.key === "E") {
+      } else if (e.key === 'd' || e.key === "D") {
         if (this.currentAngle >= 360) this.currentAngle = 0;
 
         if (this.currentSpeed === 0) {

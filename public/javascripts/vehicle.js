@@ -20,14 +20,14 @@ class Vehicle extends MovingObject{
     };
 
     rotateVehicle(e) {
-        if(e.key === 'q' || e.key === "Q") {
+        if(e.key === 'a' || e.key === "A") {
             if(this.currentAngle <= -360) this.currentAngle = 0;
             if(this.currentSpeed === 0) {
                 this.currentAngle -= 15;
             } else {
                 this.currentAngle -= 30;
             };
-        } else if(e.key === 'e' || e.key === "E") {
+        } else if(e.key === 'd' || e.key === "D") {
              if(this.currentAngle >= 360) this.currentAngle = 0;
              if(this.currentSpeed === 0) {
                  this.currentAngle += 15 ;
