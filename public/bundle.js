@@ -97,6 +97,8 @@ var Ball = /*#__PURE__*/function (_MovingObject) {
       if (this.currentX >= 620 && this.currentX <= 800 && this.currentY <= 60) {
         this.timer.gameOver = true;
       }
+
+      ;
     }
   }, {
     key: "reset",
@@ -117,19 +119,20 @@ var Ball = /*#__PURE__*/function (_MovingObject) {
       this.detectBarrier();
 
       if (this.barrierDetected) {
+        this.barrierDetected = false;
+
         if (Math.abs(this.currentAngle) < 180) {
-          this.currentAngle += 180;
-          this.currentY += this.velocity + 2;
+          this.currentAngle -= 180;
+          this.currentY += this.velocity + 3;
         } else {
           this.currentAngle -= 180;
-          this.currentY -= this.velocity + 2;
+          this.currentY -= this.velocity + 3;
         }
 
         ;
       }
 
       ;
-      this.barrierDetected = false;
       this.detectBounds();
       this.currentX += this.velocity * Math.cos(Math.PI / 180 * this.currentAngle);
       this.currentY += this.velocity * Math.sin(Math.PI / 180 * this.currentAngle);
@@ -1088,6 +1091,7 @@ var Tile = /*#__PURE__*/function () {
   return Tile;
 }();
 
+;
 module.exports = Tile;
 
 /***/ }),
