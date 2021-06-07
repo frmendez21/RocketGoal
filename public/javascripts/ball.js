@@ -63,15 +63,18 @@ class Ball extends MovingObject{
         this.detectBarrier(); 
 
         if(this.barrierDetected) {
-            this.barrierDetected = false;
+            
             if(Math.abs(this.currentAngle) < 180) {
                 this.currentAngle -= 180;
-                this.currentY += (this.velocity + 3);
+                // this.currentY += (this.velocity + 20);
+                this.currentY -= (50 + this.velocity);
             } else {
                 this.currentAngle -= 180;
-                this.currentY -= (this.velocity + 3);
+                // this.currentY -= (this.velocity + 20);
+                this.currentY += (50 + this.velocity);
             };
         };
+        this.barrierDetected = false;
 
        
         this.detectBounds();
