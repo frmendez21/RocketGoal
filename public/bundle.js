@@ -49,6 +49,7 @@ var Ball = /*#__PURE__*/function (_MovingObject) {
     _this.velocity = 0;
     _this.currentAngle = 0;
     _this.barrierDetected = false;
+    _this.barrierDist = 0;
     _this.goalDetected = false;
     _this.impact = document.getElementById('impact');
     _this.impact.volume = 0.3;
@@ -122,11 +123,11 @@ var Ball = /*#__PURE__*/function (_MovingObject) {
         if (Math.abs(this.currentAngle) < 180) {
           this.currentAngle -= 180; // this.currentY += (this.velocity + 20);
 
-          this.currentY -= 50 + this.velocity;
+          this.currentY -= this.barrierDist + (this.velocity + 1);
         } else {
           this.currentAngle -= 180; // this.currentY -= (this.velocity + 20);
 
-          this.currentY += 50 + this.velocity;
+          this.currentY += this.barrierDist + (this.velocity + 1);
         }
 
         ;
@@ -860,6 +861,7 @@ var MovingObject = /*#__PURE__*/function () {
           if ((group === this.track.group1 || group === this.track.group3) && this.currentX >= x && this.currentX <= w) this.barrierDetected = true;
           if ((group === this.track.group2 || group === this.track.group4) && this.currentX >= x) this.barrierDetected = true;
           if (group === this.track.group5 && this.currentX >= x && this.currentX <= 900) this.barrierDetected = true;
+          this.barrierDist = dist;
         }
       }
 

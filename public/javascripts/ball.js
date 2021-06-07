@@ -10,6 +10,7 @@ class Ball extends MovingObject{
         this.velocity = 0;
         this.currentAngle = 0;
         this.barrierDetected = false;
+        this.barrierDist = 0;
         this.goalDetected = false;
         this.impact =  document.getElementById('impact');
         this.impact.volume = 0.3;
@@ -67,11 +68,11 @@ class Ball extends MovingObject{
             if(Math.abs(this.currentAngle) < 180) {
                 this.currentAngle -= 180;
                 // this.currentY += (this.velocity + 20);
-                this.currentY -= (50 + this.velocity);
+                this.currentY -= (this.barrierDist + (this.velocity + 1));
             } else {
                 this.currentAngle -= 180;
                 // this.currentY -= (this.velocity + 20);
-                this.currentY += (50 + this.velocity);
+                this.currentY += (this.barrierDist + (this.velocity + 1));
             };
         };
         this.barrierDetected = false;
