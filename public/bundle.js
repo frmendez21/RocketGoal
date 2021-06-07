@@ -120,13 +120,13 @@ var Ball = /*#__PURE__*/function (_MovingObject) {
       this.detectBarrier();
 
       if (this.barrierDetected) {
-        if (Math.abs(this.currentAngle) < 180) {
-          this.currentAngle -= 180; // this.currentY += (this.velocity + 20);
+        this.barrierDetected = false;
 
+        if (Math.abs(this.currentAngle) < 180) {
+          this.currentAngle -= 180;
           this.currentY -= this.barrierDist + (this.velocity + 1);
         } else {
-          this.currentAngle -= 180; // this.currentY -= (this.velocity + 20);
-
+          this.currentAngle -= 180;
           this.currentY += this.barrierDist + (this.velocity + 1);
         }
 
@@ -134,7 +134,6 @@ var Ball = /*#__PURE__*/function (_MovingObject) {
       }
 
       ;
-      this.barrierDetected = false;
       this.detectBounds();
       this.currentX += this.velocity * Math.cos(Math.PI / 180 * this.currentAngle);
       this.currentY += this.velocity * Math.sin(Math.PI / 180 * this.currentAngle);
@@ -808,7 +807,7 @@ var MovingObject = /*#__PURE__*/function () {
   _createClass(MovingObject, [{
     key: "findDistance",
     value: function findDistance(x1, y1, x2, y2) {
-      return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2)); // return Math.hypot(x2-x1, y2-y1)
+      return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
     }
   }, {
     key: "calcEnemyMove",
@@ -1418,6 +1417,7 @@ var Vehicle = /*#__PURE__*/function (_MovingObject) {
     _this.boostedSpeed = 10;
     _this.boosted = false;
     _this.barrierDetected = false;
+    _this.barrierDist = 0;
     _this.sound = document.getElementById('rocket');
     _this.sound.volume = 0.3;
     return _this;

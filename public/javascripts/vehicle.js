@@ -15,6 +15,7 @@ class Vehicle extends MovingObject{
         this.boostedSpeed = 10;
         this.boosted = false;
         this.barrierDetected = false;
+        this.barrierDist = 0;
         this.sound = document.getElementById('rocket');
         this.sound.volume = 0.3;
     };
@@ -114,6 +115,7 @@ class Vehicle extends MovingObject{
         if(this.barrierDetected) {
             Math.abs(this.currentAngle) < 180 ? this.currentAngle += 180 : this.currentAngle -= 180;
         };
+        
         if(this.boost.boostLevel > 0 && this.boosted) {
             this.boost.decrementBoost();
         } else if(this.boosted) {
